@@ -380,7 +380,7 @@ const HOTELS = [
     copy: "全室客室露天風呂付き。チェックアウト12時でとことん“だらだら”できる大人の隠れ宿",
     desc: "早川のせせらぎを聞きながら、源泉かけ流しの客室露天風呂を好きなだけ。夕食はお部屋で季節の会席をゆっくりと。翌日は12時までのんびりお過ごしください。",
     access: "箱根湯本駅より無料送迎バスで約10分（15:00〜18:00 随時運行）",
-    badges: [["b-red", "ポイント10%"], ["b-pink", "記念日"], ["b-line", "クーポン利用可"], ["b-line", "露天風呂付客室"]],
+    badges: [["b-red", "ポイント10%"], ["b-pink", "記念日"], ["b-pink", "お誕生日クーポン対象"], ["b-line", "露天風呂付客室"]],
     kodawari: ["温泉", "源泉かけ流し", "露天風呂付客室", "部屋食", "貸切風呂", "駐車場無料", "送迎あり", "レイトチェックアウト", "Wi-Fi", "記念日対応"],
     checkin: "15:00（最終 19:00）", checkout: "12:00", rooms: 12, parking: "あり（無料・先着12台）",
     spring: "アルカリ性単純温泉（源泉かけ流し）", addr: "神奈川県足柄下郡箱根町湯本 0-0-0",
@@ -573,7 +573,7 @@ function topPage() {
   app.innerHTML = `
     ${searchBox(`<span>宿・ホテル</span>を探す`)}
     <div class="banners">
-      <div class="bn bn1"><small>期間限定 ／ 大切な人からの贈りもの</small><big>だらんスペシャルクーポン<br>最大100%OFF</big></div>
+      <div class="bn bn1"><small>Rinaさん限定 ／ お誕生日の贈りもの</small><big>お誕生日クーポン<br>100%OFF</big></div>
       <div class="bn bn2"><small>冬の温泉特集</small><big>露天風呂付き客室</big></div>
       <div class="bn bn3"><small>誕生日・記念日に</small><big>アニバーサリー宿</big></div>
     </div>
@@ -924,7 +924,7 @@ function sumBox(b) {
     <div class="r"><span>宿泊料金</span><span>${yen(c.base)}</span></div>
     <div class="r"><span>入湯税</span><span>${yen(c.tax)}</span></div>
     ${c.ptUse ? `<div class="r minus"><span>ポイント利用</span><span>-${yen(c.ptUse)}</span></div>` : ""}
-    ${c.coupon ? `<div class="r minus"><span>だらんスペシャルクーポン</span><span>-${yen(c.coupon)}</span></div>` : ""}
+    ${c.coupon ? `<div class="r minus"><span>お誕生日クーポン（100%OFF）</span><span>-${yen(c.coupon)}</span></div>` : ""}
     <div class="tot"><span>お支払い金額</span><span class="price">${yen(c.total)}</span></div>
     <div style="text-align:right;font-size:11px;color:var(--or-dk);font-weight:700">獲得予定 ${c.earn.toLocaleString()}pt</div>
   </div></div>`;
@@ -962,7 +962,7 @@ function bookPage() {
             <label><input type="radio" name="pay" value="card" ${b.pay === "card" ? "checked" : ""}> オンラインカード決済（事前決済）</label>
             <label><input type="radio" name="pay" value="local" ${b.pay === "local" ? "checked" : ""}> 現地決済（宿でお支払い）</label></td></tr>
           <tr><th>だらんポイント</th><td class="radios"><label><input type="checkbox" id="b-pt" ${b.usePt ? "checked" : ""}> 2,026ポイントを利用する</label></td></tr>
-          <tr><th>クーポン</th><td class="radios"><label><input type="checkbox" id="b-cp" ${b.coupon ? "checked" : ""}> <b style="color:var(--red)">だらんスペシャルクーポン（最大100%OFF）</b>を利用する</label></td></tr>
+          <tr><th>クーポン</th><td class="radios"><label><input type="checkbox" id="b-cp" ${b.coupon ? "checked" : ""}> <b style="color:var(--red)">🎂 お誕生日クーポン（100%OFF）</b>を利用する</label></td></tr>
         </table>
 
         <div class="h-sub">宿へのご要望</div>
@@ -1070,7 +1070,7 @@ function donePage() {
 ■チェックアウト：${jpLong(out)} 〜${esc(c.h.checkout)}
 ■泊数・室数　：${b.nights}泊・${b.rooms}室（大人${b.adults}名/室）
 ■食事　　　　：${esc(c.p.meal)}
-■お支払い金額：${yen(c.total)}（宿泊料金 ${yen(c.base)} / クーポン割引 -${yen(c.coupon)}）
+■お支払い金額：${yen(c.total)}（宿泊料金 ${yen(c.base)} / お誕生日クーポン 100%OFF -${yen(c.coupon)}）
 ■獲得予定ポイント：${c.earn.toLocaleString()}pt
 ━━━━━━━━━━━━━━━━━━━━━━
 
