@@ -30,7 +30,7 @@
   a:hover { text-decoration: underline; }
   button, input, select, textarea { font-family: inherit; font-size: 13px; }
   img { display: block; max-width: 100%; }
-  .w { max-width: 1000px; margin: 0 auto; padding: 0 12px; }
+  .w { max-width: 1000px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 
   /* ===== header ===== */
   .util { background: #f7f7f7; border-bottom: 1px solid #e8e8e8; font-size: 11px; color: var(--sub); }
@@ -48,7 +48,7 @@
   .pts { font-size: 11px; color: var(--sub); text-align: right; line-height: 1.3; }
   .pts b { color: var(--or); font-size: 14px; }
   .gnav { background: var(--or); }
-  .gnav ul { list-style: none; margin: 0 auto; padding: 0 12px; max-width: 1000px; display: flex; overflow-x: auto; scrollbar-width: none; }
+  .gnav ul { list-style: none; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px)); max-width: 1000px; display: flex; overflow-x: auto; scrollbar-width: none; }
   .gnav li { color: #fff; font-weight: 700; font-size: 13px; padding: 9px 14px; white-space: nowrap; border-right: 1px solid rgba(255,255,255,.3); }
   .gnav li:first-child { border-left: 1px solid rgba(255,255,255,.3); }
   .gnav li.on { background: #fff; color: var(--or); }
@@ -321,7 +321,7 @@
   <div class="r"><a>ヘルプ</a><a>予約確認・キャンセル</a><a>クチコミ投稿</a></div>
 </div></div>
 <div class="hdr"><div class="w">
-  <a class="logo" href="#/"><span class="a">だらん</span><span class="b">net</span></a>
+  <a class="logo" href="#top"><span class="a">だらん</span><span class="b">net</span></a>
   <div class="catch">ごろごろしに行こう。<br>国内宿泊予約サイト</div>
   <div class="mem">
     <div class="pts">保有ポイント<br><b>2,026</b> pt</div>
@@ -513,7 +513,7 @@ const S = {
 window.addEventListener("hashchange", route);
 function nav(h) { if (location.hash === h) route(); else location.hash = h; }
 function route() {
-  const parts = (location.hash.replace(/^#\/?/, "") || "").split("/").filter(Boolean);
+  const parts = (location.hash.replace(/^#\/?/, "") || "").split(/[-\/]/).filter(Boolean);
   window.scrollTo(0, 0);
   if (parts[0] === "hotel" && H(parts[1])) return hotelPage(H(parts[1]), parts[2] || "top");
   if (parts[0] === "book" && S.bk) return bookPage();
@@ -552,11 +552,11 @@ function bindSearch() {
     S.checkin = g("s-ci").value && g("s-ci").value >= TODAY ? g("s-ci").value : S.checkin;
     S.nights = +g("s-n").value; S.rooms = +g("s-r").value; S.adults = +g("s-a").value;
     for (const k in S.f) S.f[k] = g("o-" + k).checked;
-    nav("#/list");
+    nav("#list");
   };
   g("s-go").onclick = apply;
   g("s-kw").onkeydown = e => { if (e.key === "Enter") apply(); };
-  for (const k in S.f) g("o-" + k).onchange = () => { if (location.hash.startsWith("#/list")) apply(); };
+  for (const k in S.f) g("o-" + k).onchange = () => { if (location.hash.startsWith("#list")) apply(); };
 }
 
 /* ---------- TOP ---------- */
@@ -585,8 +585,8 @@ function topPage() {
     </div>
   `;
   bindSearch();
-  app.querySelectorAll("[data-kw]").forEach(a => a.onclick = () => { S.kw = a.dataset.kw; nav("#/list"); });
-  app.querySelectorAll("[data-h]").forEach(a => a.onclick = () => nav("#/hotel/" + a.dataset.h));
+  app.querySelectorAll("[data-kw]").forEach(a => a.onclick = () => { S.kw = a.dataset.kw; nav("#list"); });
+  app.querySelectorAll("[data-h]").forEach(a => a.onclick = () => nav("#hotel-" + a.dataset.h));
 }
 
 /* ---------- LIST ---------- */
@@ -614,7 +614,7 @@ function listPage() {
   const regions = {};
   HOTELS.forEach(h => regions[h.region] = (regions[h.region] || 0) + 1);
   app.innerHTML = `
-    <div class="crumb"><a href="#/">だらんnet</a> ＞ 国内宿・ホテル ＞ 検索結果${S.kw ? `「${esc(S.kw)}」` : ""}</div>
+    <div class="crumb"><a href="#top">だらんnet</a> ＞ 国内宿・ホテル ＞ 検索結果${S.kw ? `「${esc(S.kw)}」` : ""}</div>
     ${searchBox(`<span>条件を変更</span>して探す`)}
     <div class="lay" style="margin-top:14px">
       <aside class="side">
@@ -675,17 +675,17 @@ function hotelCard(h) {
     <div class="hc-head">
       <div>
         <div>${h.badges.map(b => `<span class="badge ${b[0]}">${b[1]}</span>`).join("")}</div>
-        <h3><a href="#/hotel/${h.id}">${esc(h.name)}</a></h3>
+        <h3><a href="#hotel-${h.id}">${esc(h.name)}</a></h3>
         <div class="area">${esc(h.pref)} ＞ ${esc(h.area)} ＞ ${esc(h.town)}</div>
       </div>
       <div class="hc-rv">
         クチコミ総合<br><span class="stars">${stars(h.rating)}</span><span class="score">${h.rating.toFixed(1)}</span><br>
-        <a class="rv-n" href="#/hotel/${h.id}/review">クチコミ ${h.reviews.toLocaleString()}件</a>
+        <a class="rv-n" href="#hotel-${h.id}-review">クチコミ ${h.reviews.toLocaleString()}件</a>
       </div>
     </div>
     <div class="hc-body">
       <div class="hc-photo">
-        <a href="#/hotel/${h.id}"><img class="main" src="img/${h.photos[0][0]}" alt="" loading="lazy"></a>
+        <a href="#hotel-${h.id}"><img class="main" src="img/${h.photos[0][0]}" alt="" loading="lazy"></a>
         <div class="subs">${h.photos.slice(1, 4).map(p => `<img src="img/${p[0]}" alt="" loading="lazy">`).join("")}</div>
       </div>
       <div class="hc-info">
@@ -705,7 +705,7 @@ function hotelCard(h) {
         const tot = stayTotal(h, p, S.checkin, S.nights, S.adults, 1);
         return `
         <div class="prow">
-          <div class="pn">${p.badges.map(b => `<span class="badge ${b[0]}">${b[1]}</span>`).join("")}<br><a href="#/hotel/${h.id}/plan">${esc(p.name)}</a>
+          <div class="pn">${p.badges.map(b => `<span class="badge ${b[0]}">${b[1]}</span>`).join("")}<br><a href="#hotel-${h.id}-plan">${esc(p.name)}</a>
             <div class="meta">🍽 ${esc(p.meal)}　🛏 ${esc(p.room)}</div></div>
           <div class="pp">${S.nights}泊${S.adults}名 合計(税込)<br><span class="price">${yen(tot)}</span><br>獲得 ${pts(tot).toLocaleString()}pt</div>
           <div class="pa">
@@ -716,7 +716,7 @@ function hotelCard(h) {
         </div>`;
       }).join("")}
     </div>
-    <div class="hc-foot"><a href="#/hotel/${h.id}/plan">この宿のプラン一覧（${h.plans.length}件）を見る ＞</a></div>
+    <div class="hc-foot"><a href="#hotel-${h.id}-plan">この宿のプラン一覧（${h.plans.length}件）を見る ＞</a></div>
   </div>`;
 }
 
@@ -725,7 +725,7 @@ function hotelPage(h, tab) {
   const ok = canBook(h);
   const tabs = [["top", "宿トップ"], ["plan", "プラン一覧"], ["photo", "写真"], ["review", "クチコミ"], ["map", "地図・アクセス"], ["info", "宿の詳細"]];
   app.innerHTML = `
-    <div class="crumb"><a href="#/">だらんnet</a> ＞ <a data-kw="${esc(h.pref)}">${esc(h.region)}</a> ＞ <a data-kw="${esc(h.pref)}">${esc(h.pref)}</a> ＞ <a data-kw="${esc(h.area.split("・")[0])}">${esc(h.area)}</a> ＞ ${esc(h.name)}</div>
+    <div class="crumb"><a href="#top">だらんnet</a> ＞ <a data-kw="${esc(h.pref)}">${esc(h.region)}</a> ＞ <a data-kw="${esc(h.pref)}">${esc(h.pref)}</a> ＞ <a data-kw="${esc(h.area.split("・")[0])}">${esc(h.area)}</a> ＞ ${esc(h.name)}</div>
     <div class="hp-head">
       <div>
         <div>${h.badges.map(b => `<span class="badge ${b[0]}">${b[1]}</span>`).join("")}</div>
@@ -736,13 +736,13 @@ function hotelPage(h, tab) {
       <div class="rv">
         <div style="font-size:11px">クチコミ総合</div>
         <span class="stars" style="font-size:16px">${stars(h.rating)}</span> <span class="big">${h.rating.toFixed(1)}</span>
-        <div><a href="#/hotel/${h.id}/review">${h.reviews.toLocaleString()}件のクチコミ</a></div>
+        <div><a href="#hotel-${h.id}-review">${h.reviews.toLocaleString()}件のクチコミ</a></div>
       </div>
     </div>
-    <div class="tabs">${tabs.map(([k, v]) => `<a href="#/hotel/${h.id}/${k}" class="${k === tab ? "on" : ""}">${v}</a>`).join("")}</div>
+    <div class="tabs">${tabs.map(([k, v]) => `<a href="#hotel-${h.id}-${k}" class="${k === tab ? "on" : ""}">${v}</a>`).join("")}</div>
     <div id="tabbody"></div>
   `;
-  app.querySelectorAll(".crumb [data-kw]").forEach(a => a.onclick = () => { S.kw = a.dataset.kw; nav("#/list"); });
+  app.querySelectorAll(".crumb [data-kw]").forEach(a => a.onclick = () => { S.kw = a.dataset.kw; nav("#list"); });
   const tb = document.getElementById("tabbody");
   if (tab === "top") tb.innerHTML = hotelTop(h);
   else if (tab === "plan") tb.innerHTML = planList(h);
@@ -783,7 +783,7 @@ function hotelTop(h) {
             <div style="font-size:12px">大人1名あたり</div>
             <div><span class="price" style="font-size:24px">${yen(minP)}</span> 〜 <span style="font-size:11px;color:var(--sub)">（税込）</span></div>
             <div style="font-size:12px;margin:4px 0 10px">${ok ? `<span class="vac ok" style="display:inline">○ 空室あり</span>` : `<span class="vac ng" style="display:inline">× 満室</span>`}　獲得ポイント 2%〜</div>
-            <a class="btn btn-or" href="#/hotel/${h.id}/plan" style="display:block;padding:10px 0;font-size:14px">プラン・空室を見る</a>
+            <a class="btn btn-or" href="#hotel-${h.id}-plan" style="display:block;padding:10px 0;font-size:14px">プラン・空室を見る</a>
           </div>
         </div>
         <div class="infobox rvbars">
@@ -806,7 +806,7 @@ function hotelTop(h) {
     ${planCards(h, h.plans.slice(0, 1))}
     <div class="h-sub">最新のクチコミ</div>
     ${reviewBlock(h, false)}
-    <div style="text-align:right;margin-top:6px"><a href="#/hotel/${h.id}/review">クチコミをもっと見る ＞</a></div>
+    <div style="text-align:right;margin-top:6px"><a href="#hotel-${h.id}-review">クチコミをもっと見る ＞</a></div>
   `;
 }
 function planList(h) {
@@ -904,7 +904,7 @@ function startBooking(hid, pid, ci) {
     sei: "", mei: "", seiK: "", meiK: "", email: "", tel: "", arrival: "15:00", pay: "card", usePt: false, coupon: true, req: "",
     filled: false, no: null,
   };
-  nav("#/book");
+  nav("#book");
 }
 function flow(i) {
   return `<div class="flow">${["プラン選択", "予約情報の入力", "予約内容の確認", "予約完了"].map((n, k) => `<div class="${k === i ? "on" : k < i ? "done" : ""}">${k + 1}. ${n}</div>`).join("")}</div>`;
@@ -939,7 +939,7 @@ function bookPage() {
   const b = S.bk, h = H(b.hid), p = P(h, b.pid);
   const times = ["15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00"];
   app.innerHTML = `
-    <div class="crumb"><a href="#/">だらんnet</a> ＞ <a href="#/hotel/${h.id}">${esc(h.name)}</a> ＞ 予約情報の入力</div>
+    <div class="crumb"><a href="#top">だらんnet</a> ＞ <a href="#hotel-${h.id}">${esc(h.name)}</a> ＞ 予約情報の入力</div>
     ${flow(1)}
     <div class="bk">
       <div>
@@ -982,7 +982,7 @@ function bookPage() {
         <table class="ftbl"><tr id="r-agree"><td style="text-align:center"><label style="cursor:pointer"><input type="checkbox" id="b-agree"> 上記の規約に同意する</label><div class="err">規約への同意が必要です</div></td></tr></table>
 
         <div class="cta"><button class="btn btn-or" id="b-next">予約内容の確認へ進む</button></div>
-        <div class="back"><a href="#/hotel/${h.id}/plan">＜ プラン一覧に戻る</a></div>
+        <div class="back"><a href="#hotel-${h.id}-plan">＜ プラン一覧に戻る</a></div>
       </div>
       <div id="sumwrap">${sumBox(b)}</div>
     </div>`;
@@ -1007,13 +1007,13 @@ function bookPage() {
     if (!g("b-agree").checked) bad.push("r-agree");
     bad.forEach(id => g(id).classList.add("bad"));
     if (bad.length) { g(bad[0]).scrollIntoView({ behavior: "smooth", block: "center" }); return; }
-    b.filled = true; nav("#/confirm");
+    b.filled = true; nav("#confirm");
   };
 }
 function confirmPage() {
   const b = S.bk, c = calc(b);
   app.innerHTML = `
-    <div class="crumb"><a href="#/">だらんnet</a> ＞ <a href="#/hotel/${c.h.id}">${esc(c.h.name)}</a> ＞ 予約内容の確認</div>
+    <div class="crumb"><a href="#top">だらんnet</a> ＞ <a href="#hotel-${c.h.id}">${esc(c.h.name)}</a> ＞ 予約内容の確認</div>
     ${flow(2)}
     <div class="bk">
       <div>
@@ -1037,14 +1037,14 @@ function confirmPage() {
           ${b.req ? `<tr><th>ご要望</th><td>${esc(b.req)}</td></tr>` : ""}
         </table>
         <div class="cta"><button class="btn btn-or" id="c-ok">予約を確定する</button></div>
-        <div class="back"><a href="#/book">＜ 入力内容を修正する</a></div>
+        <div class="back"><a href="#book">＜ 入力内容を修正する</a></div>
       </div>
       ${sumBox(b)}
     </div>`;
   document.getElementById("c-ok").onclick = () => {
     const btn = document.getElementById("c-ok");
     btn.disabled = true; btn.textContent = "予約処理中…";
-    setTimeout(() => { b.no = String(Math.floor(10000000 + Math.random() * 89999999)); nav("#/done"); }, 900);
+    setTimeout(() => { b.no = String(Math.floor(10000000 + Math.random() * 89999999)); nav("#done"); }, 900);
   };
 }
 function donePage() {
@@ -1088,7 +1088,7 @@ ${esc(c.h.access)}
 
 だらんnet</pre>
     </div>
-    <div class="cta"><a class="btn btn-gr" href="#/" style="padding:10px 30px;width:auto" onclick="S.bk=null">だらんnetトップへ</a></div>`;
+    <div class="cta"><a class="btn btn-gr" href="#top" style="padding:10px 30px;width:auto" onclick="S.bk=null">だらんnetトップへ</a></div>`;
 }
 
 route();
