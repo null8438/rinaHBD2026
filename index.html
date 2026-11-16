@@ -360,8 +360,11 @@ const BOOKABLE_ID = "hakone";
 const SHOW_IDS = ["hakone", "kyoto", "ishigaki"];
 
 // 予約完了画面のメッセージ（いらなければ両方 "" にする）
+// 予約フォームにはじめから入っている名前
+const GUEST = { sei: "原田", mei: "拓海", seiK: "ハラダ", meiK: "タクミ" };
+
 const DONE_MESSAGE_TITLE = "Happy Birthday, Rina! 🎂";
-const DONE_MESSAGE_BODY  = "この旅はプレゼントです。<br>当日はなんにも考えずに、だら〜んとしてね。";
+const DONE_MESSAGE_BODY  = "この旅はプレゼントです。<br>当日はなんにも考えずに、だら〜んとしてね。<br><span style=\"display:block;text-align:right;margin-top:6px\">拓海より</span>";
 
 // 宿データ（写真は img/ フォルダ）
 const HOTELS = [
@@ -892,7 +895,7 @@ function startBooking(hid, pid, ci) {
   if (!canBook(h)) return;
   S.bk = {
     hid, pid, ci, nights: S.nights, rooms: S.rooms, adults: S.adults,
-    sei: "", mei: "", seiK: "", meiK: "", email: "", tel: "", arrival: "15:00", pay: "card", usePt: false, coupon: true, req: "",
+    sei: GUEST.sei, mei: GUEST.mei, seiK: GUEST.seiK, meiK: GUEST.meiK, email: "", tel: "", arrival: "15:00", pay: "card", usePt: false, coupon: true, req: "",
     filled: false, no: null,
   };
   nav("#book");
