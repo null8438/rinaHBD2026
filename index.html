@@ -123,6 +123,8 @@
 
   .hcard { border: 1px solid var(--line); border-top: 3px solid var(--or); margin-bottom: 14px; background: #fff; }
   .hcard.sold { border-top-color: #bbb; }
+  .hcard.sold .hc-photo img { filter: grayscale(.6) brightness(.95); }
+  .soldstamp { display: inline-block; border: 2px solid var(--red); color: var(--red); font-weight: 700; font-size: 13px; padding: 1px 10px; margin-bottom: 4px; transform: rotate(-4deg); background: #fff; }
   .hc-head { padding: 8px 12px 6px; display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
   .hc-head h3 { margin: 0; font-size: 16px; }
   .hc-head .area { font-size: 11px; color: var(--sub); }
@@ -354,6 +356,9 @@
 // 全部予約できるようにしたいときは null。
 const BOOKABLE_ID = "hakone";
 
+// 検索結果に出す宿（何を検索してもこの宿だけが、この順番で出る）
+const SHOW_IDS = ["hakone", "kyoto", "ishigaki"];
+
 // 予約完了画面のメッセージ（いらなければ両方 "" にする）
 const DONE_MESSAGE_TITLE = "Happy Birthday, Rina! 🎂";
 const DONE_MESSAGE_BODY  = "この旅はプレゼントです。<br>当日はなんにも考えずに、だら〜んとしてね。";
@@ -561,7 +566,7 @@ function bindSearch() {
 
 /* ---------- TOP ---------- */
 function topPage() {
-  const pick = HOTELS.slice().sort((a, b) => canBook(b) - canBook(a));
+  const pick = SHOW_IDS.map(H).filter(Boolean);
   app.innerHTML = `
     ${searchBox(`<span>宿・ホテル</span>を探す`)}
     <div class="banners">
@@ -591,35 +596,20 @@ function topPage() {
 
 /* ---------- LIST ---------- */
 function filtered() {
-  let L = HOTELS.filter(h => {
-    const hay = h.name + h.kana + h.pref + h.area + h.town + h.kodawari.join() + h.copy;
-    if (S.kw && !S.kw.split(/\s+/).every(w => hay.includes(w))) return false;
-    if (S.f.onsen && !h.kodawari.includes("温泉")) return false;
-    if (S.f.roten && !h.kodawari.includes("露天風呂付客室")) return false;
-    if (S.f.heya && !h.kodawari.includes("部屋食")) return false;
-    if (S.f.late && !h.kodawari.includes("レイトチェックアウト")) return false;
-    if (S.f.vacant && !canBook(h)) return false;
-    return true;
-  });
-  const minP = h => Math.min(...h.plans.map(p => p.price));
-  if (S.sort === "rec") L.sort((a, b) => canBook(b) - canBook(a) || b.reviews - a.reviews);
-  if (S.sort === "cheap") L.sort((a, b) => minP(a) - minP(b));
-  if (S.sort === "rate") L.sort((a, b) => b.rating - a.rating);
-  if (S.sort === "pop") L.sort((a, b) => b.reviews - a.reviews);
-  return L;
+  return SHOW_IDS.map(H).filter(Boolean);
 }
 function listPage() {
   const L = filtered();
   const out = addD(S.checkin, S.nights);
   const regions = {};
-  HOTELS.forEach(h => regions[h.region] = (regions[h.region] || 0) + 1);
+  L.forEach(h => regions[h.region] = (regions[h.region] || 0) + 1);
   app.innerHTML = `
     <div class="crumb"><a href="#top">だらんnet</a> ＞ 国内宿・ホテル ＞ 検索結果${S.kw ? `「${esc(S.kw)}」` : ""}</div>
     ${searchBox(`<span>条件を変更</span>して探す`)}
     <div class="lay" style="margin-top:14px">
       <aside class="side">
         <div class="blk"><h4>エリアから絞り込む</h4><div class="area-list">
-          <a data-kw="">すべて <span>(${HOTELS.length})</span></a>
+          <a data-kw="">すべて <span>(${L.length})</span></a>
           ${Object.entries(regions).map(([r, n]) => `<a data-kw="${HOTELS.find(h => h.region === r).pref}">${r} <span>(${n})</span></a>`).join("")}
         </div></div>
         <div class="blk"><h4>こだわり条件</h4><div>
@@ -679,6 +669,7 @@ function hotelCard(h) {
         <div class="area">${esc(h.pref)} ＞ ${esc(h.area)} ＞ ${esc(h.town)}</div>
       </div>
       <div class="hc-rv">
+        ${ok ? "" : `<div class="soldstamp">売り切れ</div>`}
         クチコミ総合<br><span class="stars">${stars(h.rating)}</span><span class="score">${h.rating.toFixed(1)}</span><br>
         <a class="rv-n" href="#hotel-${h.id}-review">クチコミ ${h.reviews.toLocaleString()}件</a>
       </div>
@@ -782,7 +773,7 @@ function hotelTop(h) {
           <div class="in">
             <div style="font-size:12px">大人1名あたり</div>
             <div><span class="price" style="font-size:24px">${yen(minP)}</span> 〜 <span style="font-size:11px;color:var(--sub)">（税込）</span></div>
-            <div style="font-size:12px;margin:4px 0 10px">${ok ? `<span class="vac ok" style="display:inline">○ 空室あり</span>` : `<span class="vac ng" style="display:inline">× 満室</span>`}　獲得ポイント 2%〜</div>
+            <div style="font-size:12px;margin:4px 0 10px">${ok ? `<span class="vac ok" style="display:inline">○ 空室あり</span>` : `<span class="vac ng" style="display:inline">× 売り切れ（全日程満室）</span>`}　獲得ポイント 2%〜</div>
             <a class="btn btn-or" href="#hotel-${h.id}-plan" style="display:block;padding:10px 0;font-size:14px">プラン・空室を見る</a>
           </div>
         </div>
