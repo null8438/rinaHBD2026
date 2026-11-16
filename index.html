@@ -3,629 +3,1095 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>だらん｜のんびり旅の宿予約</title>
+<title>だらんnet - 国内旅行・宿泊予約サイト</title>
 <style>
   :root {
-    --main: #e8613c;
-    --main-dark: #c94a28;
-    --accent: #ffb400;
-    --bg: #f6f3ef;
-    --card: #ffffff;
-    --text: #2b2b2b;
-    --sub: #777;
-    --line: #e4ded6;
-    --ok: #1f9d6b;
-    --ng: #b8b0a6;
+    --or: #ff6a00;
+    --or-dk: #e85d00;
+    --or-lt: #fff3ea;
+    --or-line: #ffd2b0;
+    --red: #e60012;
+    --link: #0645ad;
+    --text: #333;
+    --sub: #707070;
+    --line: #dcdcdc;
+    --bg: #f4f4f4;
+    --ok: #009944;
+    --star: #ffa800;
   }
   * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
   body {
-    margin: 0;
+    margin: 0; background: #fff; color: var(--text);
     font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", Meiryo, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
+    font-size: 13px; line-height: 1.55;
   }
-  button { font-family: inherit; }
-  a { color: inherit; }
+  a { color: var(--link); text-decoration: none; cursor: pointer; }
+  a:hover { text-decoration: underline; }
+  button, input, select, textarea { font-family: inherit; font-size: 13px; }
+  img { display: block; max-width: 100%; }
+  .w { max-width: 1000px; margin: 0 auto; padding: 0 12px; }
 
-  /* ---------- header ---------- */
-  header {
-    background: var(--main);
-    color: #fff;
-    position: sticky; top: 0; z-index: 10;
-    box-shadow: 0 2px 6px rgba(0,0,0,.15);
-  }
-  .hd {
-    max-width: 1080px; margin: 0 auto;
-    display: flex; align-items: center; gap: 16px;
-    padding: 10px 16px;
-  }
-  .logo {
-    font-size: 28px; font-weight: 900; letter-spacing: .04em;
-    cursor: pointer; user-select: none;
-    display: flex; align-items: baseline; gap: 8px;
-  }
-  .logo small { font-size: 11px; font-weight: 500; opacity: .9; letter-spacing: 0; }
-  .hd nav { margin-left: auto; display: flex; gap: 14px; font-size: 13px; }
-  .hd nav span { opacity: .9; }
-  @media (max-width: 600px) { .hd nav { display: none; } }
-
-  .tabs { background: var(--main-dark); }
-  .tabs ul {
-    max-width: 1080px; margin: 0 auto; padding: 0 16px;
-    list-style: none; display: flex; gap: 4px; overflow-x: auto;
-  }
-  .tabs li {
-    color: #fff; font-size: 13px; padding: 8px 14px; white-space: nowrap;
-    opacity: .85;
-  }
-  .tabs li.on { background: var(--bg); color: var(--main-dark); font-weight: 700; opacity: 1; border-radius: 6px 6px 0 0; }
-
-  main { max-width: 1080px; margin: 0 auto; padding: 16px; }
-
-  /* ---------- search box ---------- */
-  .search {
-    background: var(--card); border-radius: 10px; padding: 16px;
-    box-shadow: 0 1px 3px rgba(0,0,0,.08);
-    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 10px; align-items: end;
-  }
-  .search label { font-size: 12px; color: var(--sub); display: block; margin-bottom: 4px; }
-  .search input, .search select, .form input, .form select, .form textarea {
-    width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 6px;
-    font-size: 15px; font-family: inherit; background: #fff; color: var(--text);
-  }
-  .btn {
-    background: var(--main); color: #fff; border: none; border-radius: 6px;
-    padding: 11px 22px; font-size: 15px; font-weight: 700; cursor: pointer;
-  }
-  .btn:hover { background: var(--main-dark); }
-  .btn:disabled { background: var(--ng); cursor: not-allowed; }
-  .btn.big { width: 100%; padding: 15px; font-size: 17px; }
-  .btn.ghost { background: #fff; color: var(--main); border: 1px solid var(--main); }
-  @media (max-width: 760px) {
-    .search { grid-template-columns: 1fr 1fr; }
-    .search .kw, .search .go { grid-column: 1 / -1; }
+  /* ===== header ===== */
+  .util { background: #f7f7f7; border-bottom: 1px solid #e8e8e8; font-size: 11px; color: var(--sub); }
+  .util .w { display: flex; justify-content: space-between; align-items: center; height: 26px; }
+  .util .r { display: flex; gap: 14px; }
+  .util .r a { color: var(--sub); }
+  .hdr .w { display: flex; align-items: center; gap: 14px; height: 62px; }
+  .logo { display: flex; align-items: baseline; cursor: pointer; text-decoration: none !important; }
+  .logo .a { color: var(--or); font-size: 32px; font-weight: 900; letter-spacing: -.02em; font-family: "Arial Rounded MT Bold", "Hiragino Maru Gothic ProN", "Hiragino Kaku Gothic ProN", sans-serif; }
+  .logo .b { color: var(--or); font-size: 18px; font-weight: 700; margin-left: 1px; font-family: Arial, sans-serif; }
+  .hdr .catch { font-size: 11px; color: var(--sub); line-height: 1.3; }
+  .hdr .mem { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+  .pill { border: 1px solid var(--line); border-radius: 4px; padding: 5px 10px; font-size: 12px; color: var(--text); background: #fff; white-space: nowrap; }
+  .pill.or { background: var(--or); border-color: var(--or); color: #fff; font-weight: 700; }
+  .pts { font-size: 11px; color: var(--sub); text-align: right; line-height: 1.3; }
+  .pts b { color: var(--or); font-size: 14px; }
+  .gnav { background: var(--or); }
+  .gnav ul { list-style: none; margin: 0 auto; padding: 0 12px; max-width: 1000px; display: flex; overflow-x: auto; scrollbar-width: none; }
+  .gnav li { color: #fff; font-weight: 700; font-size: 13px; padding: 9px 14px; white-space: nowrap; border-right: 1px solid rgba(255,255,255,.3); }
+  .gnav li:first-child { border-left: 1px solid rgba(255,255,255,.3); }
+  .gnav li.on { background: #fff; color: var(--or); }
+  @media (max-width: 720px) {
+    .hdr .catch, .util .l, .pts { display: none; }
+    .hdr .w { height: 52px; }
+    .logo .a { font-size: 26px; }
   }
 
-  .campaign {
-    margin: 16px 0; border-radius: 10px; padding: 14px 18px;
-    background: linear-gradient(90deg, #fff3d6, #ffe1d3);
-    border: 1px dashed var(--accent);
-    display: flex; gap: 12px; align-items: center; font-size: 14px;
-  }
-  .campaign b { color: var(--main-dark); }
-
-  h2.sec { font-size: 18px; margin: 24px 0 10px; border-left: 5px solid var(--main); padding-left: 10px; }
-  .count { font-size: 13px; color: var(--sub); margin-bottom: 10px; }
-
-  /* ---------- list ---------- */
-  .plan {
-    background: var(--card); border-radius: 10px; overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,.08);
-    display: grid; grid-template-columns: 260px 1fr 200px;
-    margin-bottom: 14px; cursor: pointer; transition: box-shadow .15s, transform .15s;
-  }
-  .plan:hover { box-shadow: 0 4px 14px rgba(0,0,0,.12); transform: translateY(-1px); }
-  .thumb {
-    min-height: 180px; display: flex; align-items: center; justify-content: center;
-    font-size: 72px; position: relative;
-  }
-  .thumb .area {
-    position: absolute; left: 10px; top: 10px; background: rgba(0,0,0,.55); color: #fff;
-    font-size: 11px; padding: 2px 8px; border-radius: 3px;
-  }
-  .plan .body { padding: 14px 16px; }
-  .plan h3 { margin: 0 0 4px; font-size: 18px; color: #1a5fa8; }
-  .plan:hover h3 { text-decoration: underline; }
-  .stars { color: var(--accent); font-size: 14px; }
-  .stars em { color: var(--text); font-style: normal; font-weight: 700; margin-left: 4px; }
-  .stars span { color: var(--sub); font-size: 12px; margin-left: 4px; }
-  .catch { font-size: 13px; margin: 6px 0; }
-  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .tag { font-size: 11px; border: 1px solid var(--line); border-radius: 3px; padding: 1px 6px; color: var(--sub); background: #faf8f5; }
-  .plan .side {
-    padding: 14px 16px; border-left: 1px solid var(--line);
-    display: flex; flex-direction: column; justify-content: center; align-items: flex-end; gap: 6px;
-    text-align: right;
-  }
-  .price { font-size: 24px; font-weight: 900; color: var(--main-dark); }
-  .price small { font-size: 12px; font-weight: 400; color: var(--sub); }
-  .pt { font-size: 12px; color: var(--ok); }
-  .status { font-size: 12px; font-weight: 700; border-radius: 3px; padding: 2px 8px; }
-  .status.ok { background: #e3f6ee; color: var(--ok); }
-  .status.ng { background: #eee; color: #888; }
-  .plan.soldout { opacity: .7; }
-  @media (max-width: 760px) {
-    .plan { grid-template-columns: 1fr; }
-    .thumb { min-height: 140px; }
-    .plan .side { border-left: none; border-top: 1px solid var(--line); flex-direction: row; justify-content: space-between; align-items: center; }
-  }
-
-  /* ---------- detail ---------- */
-  .crumb { font-size: 12px; color: var(--sub); margin-bottom: 10px; }
-  .crumb a { color: #1a5fa8; cursor: pointer; text-decoration: underline; }
-  .hero { border-radius: 10px; height: 240px; display: flex; align-items: center; justify-content: center; font-size: 110px; position: relative; }
-  .hero .area { font-size: 12px; }
-  .detail {
-    display: grid; grid-template-columns: 1fr 320px; gap: 16px; margin-top: 16px; align-items: start;
-  }
-  .box { background: var(--card); border-radius: 10px; padding: 18px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
-  .box h1 { font-size: 22px; margin: 0 0 6px; }
-  .box h4 { margin: 18px 0 8px; font-size: 15px; border-bottom: 2px solid var(--line); padding-bottom: 4px; }
-  .box ul { margin: 0; padding-left: 20px; font-size: 14px; }
-  .info { width: 100%; border-collapse: collapse; font-size: 14px; }
-  .info th { text-align: left; width: 90px; color: var(--sub); font-weight: 500; padding: 6px 0; vertical-align: top; }
-  .info td { padding: 6px 0; }
-  .review { background: #faf8f5; border-radius: 6px; padding: 10px 12px; font-size: 13px; margin-bottom: 8px; }
-  .review b { font-size: 12px; color: var(--sub); font-weight: 500; }
-  .sticky { position: sticky; top: 110px; }
-  .sumrow { display: flex; justify-content: space-between; font-size: 14px; padding: 4px 0; }
-  .sumrow.total { border-top: 1px solid var(--line); margin-top: 8px; padding-top: 10px; font-weight: 700; }
-  .sumrow.total span:last-child { color: var(--main-dark); font-size: 22px; }
-  .soldmsg { background: #f3f0ec; border-radius: 6px; padding: 12px; font-size: 13px; color: #666; text-align: center; }
-  @media (max-width: 860px) {
-    .detail { grid-template-columns: 1fr; }
-    .sticky { position: static; }
-    .hero { height: 180px; font-size: 80px; }
-  }
-
-  /* ---------- form ---------- */
-  .steps { display: flex; gap: 0; margin-bottom: 16px; font-size: 12px; }
-  .steps div { flex: 1; text-align: center; padding: 8px 4px; background: #e9e4dd; color: #888; position: relative; }
-  .steps div.on { background: var(--main); color: #fff; font-weight: 700; }
-  .steps div.done { background: #f2b9a8; color: #fff; }
-  .form .row { margin-bottom: 14px; }
-  .form label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px; }
-  .form label .req { background: var(--main); color: #fff; font-size: 10px; padding: 1px 5px; border-radius: 3px; margin-left: 6px; vertical-align: 1px; }
-  .form .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .err { color: #d0302f; font-size: 12px; margin-top: 4px; display: none; }
-  .row.bad .err { display: block; }
-  .row.bad input, .row.bad select { border-color: #d0302f; }
-  .check { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; }
-  .check input { width: auto; margin-top: 4px; }
-
-  /* ---------- done ---------- */
-  .done { text-align: center; padding: 30px 18px; }
-  .done .big-icon { font-size: 64px; }
-  .done h1 { color: var(--main-dark); }
-  .ticket {
-    max-width: 480px; margin: 18px auto; text-align: left;
-    border: 2px dashed var(--main); border-radius: 10px; padding: 16px 18px; background: #fffaf6;
-  }
-  .ticket .no { font-size: 13px; color: var(--sub); }
-  .ticket .no b { font-size: 20px; color: var(--text); letter-spacing: .1em; }
-  .bday {
-    max-width: 480px; margin: 18px auto 0; padding: 18px; border-radius: 10px;
-    background: linear-gradient(135deg, #ffe0ea, #fff1cc); font-size: 15px; line-height: 1.9;
-  }
-  .bday b { font-size: 20px; color: #d6336c; display: block; margin-bottom: 4px; }
-
-  footer { text-align: center; font-size: 11px; color: var(--sub); padding: 30px 16px; }
-
+  /* ===== common ===== */
+  .crumb { font-size: 11px; color: var(--sub); padding: 8px 0; }
+  .crumb a { color: var(--link); }
+  .btn { display: inline-block; border: none; border-radius: 4px; cursor: pointer; font-weight: 700; text-align: center; text-decoration: none !important; }
+  .btn-or { background: linear-gradient(#ff8a2b, #ff6a00); color: #fff; border: 1px solid #e35b00; box-shadow: 0 2px 0 #c44f00; }
+  .btn-or:hover { background: linear-gradient(#ff7a12, #f45f00); }
+  .btn-or:active { transform: translateY(1px); box-shadow: 0 1px 0 #c44f00; }
+  .btn-gr { background: linear-gradient(#fff, #eee); border: 1px solid #bbb; color: var(--text); }
+  .btn-dis { background: #ccc; color: #fff; border: 1px solid #bbb; cursor: default; }
+  .stars { color: var(--star); letter-spacing: -1px; font-size: 13px; }
+  .score { font-weight: 700; color: var(--or-dk); font-size: 16px; margin: 0 2px 0 4px; }
+  .badge { display: inline-block; font-size: 10px; line-height: 1; padding: 3px 5px; border-radius: 2px; font-weight: 700; margin: 0 3px 3px 0; }
+  .b-red { background: var(--red); color: #fff; }
+  .b-or { background: var(--or); color: #fff; }
+  .b-line { border: 1px solid var(--or); color: var(--or); padding: 2px 4px; }
+  .b-gray { border: 1px solid #aaa; color: #666; padding: 2px 4px; font-weight: 400; }
+  .b-pink { background: #e9437a; color: #fff; }
+  .price { color: var(--red); font-weight: 700; }
+  .h-sec { font-size: 15px; font-weight: 700; border-bottom: 2px solid var(--or); padding: 4px 0 4px 2px; margin: 18px 0 10px; }
+  .h-sub { font-size: 13px; font-weight: 700; background: #f2f2f2; border-left: 4px solid var(--or); padding: 6px 10px; margin: 16px 0 8px; }
   .hidden { display: none !important; }
+
+  /* ===== top search ===== */
+  .sbox { background: var(--or-lt); border: 1px solid var(--or-line); border-radius: 4px; padding: 12px; margin-top: 8px; }
+  .sbox .ttl { font-weight: 700; font-size: 14px; margin-bottom: 8px; }
+  .sbox .ttl span { color: var(--or); }
+  .sgrid { display: grid; grid-template-columns: 2.2fr 1.3fr .8fr .8fr .8fr 1fr; gap: 8px; align-items: end; }
+  .sgrid label { display: block; font-size: 11px; font-weight: 700; color: #555; margin-bottom: 3px; }
+  .sgrid input, .sgrid select { width: 100%; height: 34px; border: 1px solid #bbb; border-radius: 3px; padding: 0 8px; background: #fff; }
+  .sgrid .btn { height: 38px; width: 100%; font-size: 15px; }
+  .sopt { margin-top: 8px; font-size: 12px; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+  .sopt label { display: flex; gap: 4px; align-items: center; cursor: pointer; }
+  @media (max-width: 760px) {
+    .sgrid { grid-template-columns: 1fr 1fr 1fr; }
+    .sgrid .kw, .sgrid .dt, .sgrid .go { grid-column: 1 / -1; }
+  }
+
+  .banners { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; margin: 12px 0 4px; }
+  .bn { border-radius: 4px; padding: 12px 14px; color: #fff; font-weight: 700; min-height: 78px; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; }
+  .bn small { font-weight: 400; font-size: 11px; opacity: .95; }
+  .bn big { font-size: 20px; line-height: 1.2; }
+  .bn1 { background: linear-gradient(110deg, #ff5e3a 0%, #ff9a00 100%); }
+  .bn2 { background: linear-gradient(110deg, #1aa3d9, #3cc2a7); }
+  .bn3 { background: linear-gradient(110deg, #9b59d0, #e9437a); }
+  @media (max-width: 760px) { .banners { grid-template-columns: 1fr; } }
+
+  /* ===== list layout ===== */
+  .lay { display: grid; grid-template-columns: 200px 1fr; gap: 16px; align-items: start; }
+  @media (max-width: 820px) { .lay { grid-template-columns: 1fr; } .side { display: none; } }
+  .side .blk { border: 1px solid var(--line); margin-bottom: 10px; }
+  .side .blk h4 { margin: 0; background: #f2f2f2; padding: 6px 8px; font-size: 12px; border-bottom: 1px solid var(--line); }
+  .side .blk div { padding: 6px 8px; }
+  .side label { display: flex; gap: 5px; align-items: center; font-size: 12px; padding: 2px 0; cursor: pointer; }
+  .side .area-list a { display: block; font-size: 12px; padding: 2px 0; }
+  .side .area-list span { color: var(--sub); font-size: 11px; }
+
+  .resbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); padding-bottom: 6px; margin-bottom: 8px; gap: 6px; }
+  .resbar .cnt b { color: var(--red); font-size: 18px; }
+  .sorts { display: flex; gap: 0; font-size: 12px; }
+  .sorts a { padding: 4px 9px; border: 1px solid var(--line); margin-left: -1px; color: var(--text); background: #fff; }
+  .sorts a.on { background: var(--or); border-color: var(--or); color: #fff; font-weight: 700; text-decoration: none; }
+  .cond { font-size: 12px; background: #fafafa; border: 1px solid #eee; padding: 6px 10px; margin-bottom: 10px; color: #555; }
+
+  .hcard { border: 1px solid var(--line); border-top: 3px solid var(--or); margin-bottom: 14px; background: #fff; }
+  .hcard.sold { border-top-color: #bbb; }
+  .hc-head { padding: 8px 12px 6px; display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
+  .hc-head h3 { margin: 0; font-size: 16px; }
+  .hc-head .area { font-size: 11px; color: var(--sub); }
+  .hc-rv { text-align: right; white-space: nowrap; font-size: 11px; }
+  .hc-rv .rv-n { color: var(--link); }
+  .hc-body { display: grid; grid-template-columns: 220px 1fr; gap: 12px; padding: 0 12px 10px; }
+  .hc-photo .main { width: 100%; aspect-ratio: 3/2; object-fit: cover; }
+  .hc-photo .subs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 2px; }
+  .hc-photo .subs img { width: 100%; aspect-ratio: 3/2; object-fit: cover; }
+  .hc-info .copy { font-weight: 700; color: #b34700; font-size: 13px; margin: 2px 0 4px; }
+  .hc-info .desc { font-size: 12px; color: #444; margin: 0 0 6px; }
+  .hc-info .acc { font-size: 11px; color: var(--sub); margin-bottom: 4px; }
+  .hc-info .acc::before { content: "🚃 "; }
+  .hc-min { display: flex; gap: 10px; align-items: baseline; font-size: 12px; margin-top: 6px; flex-wrap: wrap; }
+  .hc-min .price { font-size: 20px; }
+  .hc-min .pt { color: var(--or-dk); font-size: 11px; font-weight: 700; }
+  .plans { border-top: 1px dotted #ccc; }
+  .prow { display: grid; grid-template-columns: 1fr 150px 110px; gap: 10px; align-items: center; padding: 8px 12px; border-bottom: 1px dotted #ddd; }
+  .prow:last-child { border-bottom: none; }
+  .prow .pn { font-size: 13px; }
+  .prow .pn a { font-weight: 700; }
+  .prow .meta { font-size: 11px; color: var(--sub); margin-top: 2px; }
+  .prow .pp { text-align: right; font-size: 11px; color: var(--sub); }
+  .prow .pp .price { font-size: 16px; }
+  .prow .pa { text-align: center; }
+  .prow .pa .btn { width: 100%; padding: 7px 0; font-size: 13px; }
+  .vac { font-size: 11px; font-weight: 700; margin-bottom: 3px; display: block; }
+  .vac.ok { color: var(--ok); }
+  .vac.few { color: var(--red); }
+  .vac.ng { color: #999; }
+  .hc-foot { background: #fafafa; border-top: 1px solid #eee; padding: 6px 12px; text-align: right; font-size: 12px; }
+  @media (max-width: 640px) {
+    .hc-body { grid-template-columns: 1fr; }
+    .prow { grid-template-columns: 1fr 110px; }
+    .prow .pp { grid-column: 1; text-align: left; }
+    .prow .pa { grid-column: 2; grid-row: 1 / span 2; }
+    .hc-head { flex-direction: column; }
+    .hc-rv { text-align: left; }
+  }
+
+  /* ===== hotel page ===== */
+  .hp-head { border-bottom: 1px solid var(--line); padding-bottom: 8px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+  .hp-head h1 { font-size: 22px; margin: 2px 0; }
+  .hp-head .kana { font-size: 11px; color: var(--sub); }
+  .hp-head .rv { text-align: right; }
+  .hp-head .rv .big { font-size: 26px; font-weight: 700; color: var(--or-dk); }
+  .tabs { display: flex; border-bottom: 3px solid var(--or); margin: 10px 0 14px; overflow-x: auto; scrollbar-width: none; }
+  .tabs a { padding: 9px 16px; font-weight: 700; color: var(--text); background: #f0f0f0; border: 1px solid #ddd; border-bottom: none; margin-right: 3px; border-radius: 4px 4px 0 0; white-space: nowrap; }
+  .tabs a.on { background: var(--or); color: #fff; border-color: var(--or); text-decoration: none; }
+  .hp-top { display: grid; grid-template-columns: 1fr 300px; gap: 16px; align-items: start; }
+  @media (max-width: 820px) { .hp-top { grid-template-columns: 1fr; } }
+  .gal .gmain { width: 100%; aspect-ratio: 3/2; object-fit: cover; background: #eee; }
+  .gal .gcap { font-size: 11px; color: var(--sub); padding: 4px 0; }
+  .gal .gth { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+  .gal .gth img { width: 100%; aspect-ratio: 1; object-fit: cover; cursor: pointer; opacity: .65; border: 2px solid transparent; }
+  .gal .gth img.on { opacity: 1; border-color: var(--or); }
+  .infobox { border: 1px solid var(--line); }
+  .infobox h4 { margin: 0; background: #f2f2f2; padding: 6px 10px; font-size: 12px; border-bottom: 1px solid var(--line); }
+  .infobox .in { padding: 10px; }
+  .infobox .row2 { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; border-bottom: 1px dotted #ddd; }
+  .infobox .row2:last-child { border-bottom: none; }
+  .rvbars .r { display: grid; grid-template-columns: 70px 1fr 30px; gap: 6px; align-items: center; font-size: 11px; padding: 2px 0; }
+  .rvbars .bar { height: 7px; background: #eee; border-radius: 4px; overflow: hidden; }
+  .rvbars .bar i { display: block; height: 100%; background: var(--star); }
+  .points-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .points-list > div { border: 1px solid #eee; }
+  .points-list img { width: 100%; aspect-ratio: 3/2; object-fit: cover; }
+  .points-list p { margin: 0; padding: 6px 8px; font-size: 12px; }
+  .points-list b { display: block; color: #b34700; font-size: 13px; margin-bottom: 2px; }
+  @media (max-width: 640px) { .points-list { grid-template-columns: 1fr; } }
+  .kodawari { display: flex; flex-wrap: wrap; gap: 4px; }
+  .kodawari span { font-size: 11px; border: 1px solid #ccc; padding: 2px 6px; border-radius: 2px; background: #fff; }
+  .kodawari span.on { border-color: var(--or); color: var(--or-dk); background: var(--or-lt); font-weight: 700; }
+
+  .pcard { border: 1px solid var(--line); margin-bottom: 14px; }
+  .pcard .ph { background: var(--or-lt); padding: 8px 12px; border-bottom: 1px solid var(--or-line); }
+  .pcard .ph a.nm { font-size: 15px; font-weight: 700; }
+  .pcard .pb { display: grid; grid-template-columns: 180px 1fr; gap: 12px; padding: 10px 12px; }
+  .pcard .pb img { width: 100%; aspect-ratio: 3/2; object-fit: cover; }
+  .pcard table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .pcard th, .pcard td { border: 1px solid #e3e3e3; padding: 5px 8px; text-align: left; }
+  .pcard th { background: #f7f7f7; width: 100px; white-space: nowrap; font-weight: 400; color: #555; }
+  .pcard .pf { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 12px; background: #fafafa; border-top: 1px solid #eee; flex-wrap: wrap; }
+  .pcard .pf .price { font-size: 20px; }
+  .pcard .pf .btn { padding: 9px 22px; font-size: 14px; }
+  @media (max-width: 640px) { .pcard .pb { grid-template-columns: 1fr; } }
+
+  /* calendar */
+  .cal-wrap { border: 1px solid var(--or-line); background: #fff; padding: 10px; margin: 0 12px 12px; }
+  .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .cal-nav b { font-size: 14px; }
+  .cal-nav button { border: 1px solid #ccc; background: #fff; border-radius: 3px; padding: 3px 10px; cursor: pointer; }
+  .cal-nav button:disabled { opacity: .35; cursor: default; }
+  table.cal { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  table.cal th { font-size: 11px; background: #f5f5f5; border: 1px solid #e3e3e3; padding: 3px 0; }
+  table.cal th.su { color: var(--red); } table.cal th.sa { color: #0064c8; }
+  table.cal td { border: 1px solid #e3e3e3; height: 54px; vertical-align: top; padding: 2px 3px; font-size: 11px; overflow: hidden; }
+  .cal-wrap { overflow: hidden; }
+  @media (max-width: 640px) { .cal-wrap { margin: 0 4px 8px; padding: 6px; } table.cal td { padding: 1px; height: 48px; } table.cal td .p { font-size: 9px; letter-spacing: -.03em; } }
+  table.cal td .d { font-size: 11px; }
+  table.cal td.su .d, table.cal td.hol .d { color: var(--red); } table.cal td.sa .d { color: #0064c8; }
+  table.cal td .m { display: block; text-align: center; font-size: 15px; font-weight: 700; line-height: 1.2; }
+  table.cal td .p { display: block; text-align: center; font-size: 10px; color: var(--red); }
+  table.cal td.av { cursor: pointer; }
+  table.cal td.av:hover { background: var(--or-lt); }
+  table.cal td.av .m { color: var(--ok); }
+  table.cal td.few .m { color: var(--or-dk); }
+  table.cal td.ng { background: #f4f4f4; color: #aaa; }
+  table.cal td.ng .m { color: #aaa; }
+  table.cal td.past { background: #fafafa; color: #ccc; }
+  table.cal td.sel { background: #ffe0c7 !important; outline: 2px solid var(--or); outline-offset: -2px; }
+  .cal-leg { font-size: 11px; color: var(--sub); margin-top: 6px; }
+  .cal-leg b { color: var(--ok); } .cal-leg i { color: var(--or-dk); font-style: normal; font-weight: 700; }
+
+  .rv-item { border-bottom: 1px solid #eee; padding: 10px 0; }
+  .rv-item .t { font-weight: 700; font-size: 13px; }
+  .rv-item .u { font-size: 11px; color: var(--sub); }
+  .rv-item p { margin: 4px 0 0; font-size: 12px; }
+  .rv-item .reply { background: #f7f7f7; font-size: 11px; padding: 6px 8px; margin-top: 6px; border-left: 3px solid #ccc; }
+  .map { height: 240px; border: 1px solid var(--line); background:
+      linear-gradient(90deg, transparent 49%, #fff 49%, #fff 51%, transparent 51%) 0 0/120px 100%,
+      linear-gradient(0deg, transparent 49%, #fff 49%, #fff 51%, transparent 51%) 0 0/100% 90px,
+      linear-gradient(135deg, #e7efe0, #dfe9f1);
+    position: relative; }
+  .map .pin { position: absolute; left: 50%; top: 45%; transform: translate(-50%, -100%); font-size: 34px; }
+  .map .lbl { position: absolute; left: 50%; top: 47%; transform: translateX(-50%); background: #fff; border: 1px solid var(--or); padding: 2px 8px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+  table.spec { width: 100%; border-collapse: collapse; font-size: 12px; }
+  table.spec th, table.spec td { border: 1px solid #e3e3e3; padding: 6px 8px; text-align: left; vertical-align: top; }
+  table.spec th { background: #f7f7f7; width: 120px; font-weight: 400; color: #555; }
+
+  /* ===== booking ===== */
+  .flow { display: flex; margin: 10px 0 14px; counter-reset: s; }
+  .flow div { flex: 1; text-align: center; font-size: 12px; padding: 8px 4px 8px 14px; background: #e9e9e9; color: #888; position: relative; font-weight: 700; }
+  .flow div::after { content: ""; position: absolute; right: -10px; top: 0; border-left: 10px solid #e9e9e9; border-top: 17px solid transparent; border-bottom: 17px solid transparent; z-index: 1; }
+  .flow div:last-child::after { display: none; }
+  .flow div.on { background: var(--or); color: #fff; }
+  .flow div.on::after { border-left-color: var(--or); }
+  .flow div.done { background: #ffc79e; color: #fff; }
+  .flow div.done::after { border-left-color: #ffc79e; }
+  @media (max-width: 600px) { .flow div { font-size: 10px; padding-left: 12px; } }
+  .bk { display: grid; grid-template-columns: 1fr 290px; gap: 16px; align-items: start; }
+  @media (max-width: 820px) { .bk { grid-template-columns: 1fr; } .bk .sum { order: -1; } }
+  .ftbl { width: 100%; border-collapse: collapse; margin-bottom: 6px; }
+  .ftbl th, .ftbl td { border: 1px solid #ddd; padding: 9px 10px; text-align: left; vertical-align: top; font-size: 13px; }
+  .ftbl th { background: #f7f7f7; width: 180px; font-weight: 700; font-size: 12px; }
+  .ftbl .req { background: var(--red); color: #fff; font-size: 10px; padding: 1px 4px; border-radius: 2px; margin-left: 6px; font-weight: 400; }
+  .ftbl .opt { background: #999; color: #fff; font-size: 10px; padding: 1px 4px; border-radius: 2px; margin-left: 6px; font-weight: 400; }
+  .ftbl input[type=text], .ftbl input[type=email], .ftbl input[type=tel], .ftbl input[type=date], .ftbl select, .ftbl textarea { border: 1px solid #bbb; border-radius: 3px; padding: 6px 8px; max-width: 100%; }
+  .ftbl input.w100, .ftbl textarea { width: 100%; }
+  .ftbl .note { font-size: 11px; color: var(--sub); margin-top: 3px; }
+  .ftbl .err { color: var(--red); font-size: 12px; font-weight: 700; margin-top: 3px; display: none; }
+  .ftbl tr.bad td { background: #fff3f3; }
+  .ftbl tr.bad .err { display: block; }
+  .ftbl tr.bad input { border-color: var(--red); }
+  .ftbl .radios label { display: block; padding: 3px 0; cursor: pointer; }
+  @media (max-width: 640px) { .ftbl th, .ftbl td { display: block; width: 100%; border-bottom: none; } .ftbl tr { border-bottom: 1px solid #ddd; display: block; } }
+  .sum { border: 2px solid var(--or); position: sticky; top: 8px; }
+  .sum h4 { margin: 0; background: var(--or); color: #fff; padding: 7px 10px; font-size: 13px; }
+  .sum .in { padding: 10px; font-size: 12px; }
+  .sum img { width: 100%; aspect-ratio: 3/2; object-fit: cover; margin-bottom: 6px; }
+  .sum .hn { font-weight: 700; font-size: 13px; }
+  .sum .pn { color: var(--sub); font-size: 11px; margin: 2px 0 8px; }
+  .sum .r { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px dotted #ddd; gap: 8px; }
+  .sum .r span:last-child { text-align: right; }
+  .sum .tot { display: flex; justify-content: space-between; align-items: baseline; padding-top: 8px; font-weight: 700; }
+  .sum .tot .price { font-size: 22px; }
+  .sum .minus { color: var(--ok); }
+  .agree { border: 1px solid #ddd; background: #fafafa; padding: 10px; font-size: 11px; height: 90px; overflow-y: auto; color: #555; margin: 10px 0; }
+  .cta { text-align: center; margin: 16px 0; }
+  .cta .btn { padding: 13px 0; width: 100%; max-width: 380px; font-size: 16px; }
+  .back { text-align: center; font-size: 12px; }
+
+  .done-box { border: 2px solid var(--or); padding: 22px 16px; text-align: center; margin-bottom: 16px; }
+  .done-box h1 { color: var(--or-dk); font-size: 20px; margin: 4px 0 8px; }
+  .done-no { display: inline-block; border: 1px solid var(--line); background: #fafafa; padding: 8px 18px; margin: 8px 0; }
+  .done-no b { font-size: 22px; letter-spacing: .08em; font-family: Arial, sans-serif; }
+  .mail { border: 1px solid var(--line); margin: 14px 0; }
+  .mail .mh { background: #f2f2f2; font-size: 11px; padding: 6px 10px; color: #555; border-bottom: 1px solid var(--line); }
+  .mail pre { margin: 0; padding: 12px; font-family: inherit; font-size: 12px; white-space: pre-wrap; line-height: 1.7; }
+  .bday { margin: 16px auto 0; max-width: 520px; border-radius: 6px; padding: 18px; background: linear-gradient(135deg, #ffe3ec, #fff3cf); font-size: 15px; line-height: 1.9; }
+  .bday b { display: block; font-size: 20px; color: #d6336c; margin-bottom: 4px; }
+
+  /* ===== footer ===== */
+  footer { background: #f4f4f4; border-top: 3px solid var(--or); margin-top: 30px; padding: 16px 0 10px; font-size: 11px; color: #666; }
+  footer .cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  footer h5 { margin: 0 0 4px; font-size: 12px; color: #333; }
+  footer .cols a { display: block; color: #666; padding: 1px 0; }
+  footer .copy { text-align: center; margin-top: 14px; padding-top: 10px; border-top: 1px solid #ddd; }
+  @media (max-width: 640px) { footer .cols { grid-template-columns: 1fr 1fr; } }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="hd">
-    <div class="logo" onclick="go('list')">だらん <small>のんびり旅の宿予約</small></div>
-    <nav><span>ポイント 2,026pt</span><span>予約の確認</span><span>マイページ</span></nav>
+<div class="util"><div class="w">
+  <div class="l">国内旅行・ホテル・旅館の宿泊予約なら だらんnet</div>
+  <div class="r"><a>ヘルプ</a><a>予約確認・キャンセル</a><a>クチコミ投稿</a></div>
+</div></div>
+<div class="hdr"><div class="w">
+  <a class="logo" href="#/"><span class="a">だらん</span><span class="b">net</span></a>
+  <div class="catch">ごろごろしに行こう。<br>国内宿泊予約サイト</div>
+  <div class="mem">
+    <div class="pts">保有ポイント<br><b>2,026</b> pt</div>
+    <span class="pill">お気に入り</span>
+    <span class="pill or">マイページ</span>
   </div>
-  <div class="tabs"><ul>
-    <li class="on">国内宿泊</li><li>温泉</li><li>ホテル</li><li>レンタカー</li><li>遊び・体験</li><li>ゴルフ</li>
-  </ul></div>
-</header>
+</div></div>
+<nav class="gnav"><ul>
+  <li class="on">国内宿・ホテル</li><li>航空券＋宿</li><li>JR＋宿</li><li>高速バス</li><li>レンタカー</li><li>遊び・体験</li><li>観光ガイド</li><li>クーポン</li>
+</ul></nav>
 
-<main id="app"></main>
+<main class="w" id="app"></main>
 
-<footer>© だらん ― ごろごろ、だらだら、いい旅を。<br>※このサイトは個人用のおあそびサイトです。実際の予約・決済は行われません。</footer>
+<footer><div class="w">
+  <div class="cols">
+    <div><h5>国内宿泊</h5><a>北海道</a><a>東北</a><a>関東</a><a>甲信越・北陸</a><a>東海</a><a>関西</a><a>九州・沖縄</a></div>
+    <div><h5>特集</h5><a>温泉特集</a><a>露天風呂付き客室</a><a>記念日・誕生日プラン</a><a>部屋食でのんびり</a><a>レイトチェックアウト</a></div>
+    <div><h5>ご利用ガイド</h5><a>はじめての方へ</a><a>だらんポイントについて</a><a>キャンセルについて</a><a>よくある質問</a></div>
+    <div><h5>会社情報</h5><a>運営会社</a><a>利用規約</a><a>プライバシーポリシー</a><a href="img/CREDITS.md">写真クレジット</a></div>
+  </div>
+  <div class="copy">© DARAN net ― このサイトは個人用のおあそびサイトです。実在の宿・予約サービスとは関係なく、実際の予約・決済は行われません。</div>
+</div></footer>
 
 <script>
 /* =====================================================
-   設定ここだけいじればOK
+   ★ 設定（ここだけいじればOK）
    ===================================================== */
 
-// 予約できる（空室ありの）宿の id。ほかは全部「満室」になる。
-// 全部予約できるようにしたいときは null にする。
+// 空室がある（予約できる）宿の id。ほかの宿は全部「満室」になる。
+// 全部予約できるようにしたいときは null。
 const BOOKABLE_ID = "hakone";
 
-// 予約完了画面に出すメッセージ（いらなければ空文字 "" にする）
+// 予約完了画面のメッセージ（いらなければ両方 "" にする）
 const DONE_MESSAGE_TITLE = "Happy Birthday, Rina! 🎂";
 const DONE_MESSAGE_BODY  = "この旅はプレゼントです。<br>当日はなんにも考えずに、だら〜んとしてね。";
 
-// 宿のデータ
+// 宿データ（写真は img/ フォルダ）
 const HOTELS = [
   {
-    id: "hakone",
-    name: "箱根 湯けむりの宿 だらり庵",
-    area: "神奈川 > 箱根・湯本",
-    emoji: "♨️",
-    bg: "linear-gradient(135deg,#f6d365,#fda085)",
-    rating: 4.8, reviews: 1284,
-    price: 28000,
-    catch: "全室露天風呂付き客室。チェックアウトは驚きの12時、とことんだらだらできる大人の隠れ宿。",
-    tags: ["露天風呂付客室", "部屋食", "レイトチェックアウト", "源泉かけ流し", "記念日プラン"],
-    plan: "【記念日プラン】ケーキ＆スパークリング付き 季節の会席と貸切露天",
-    access: "箱根湯本駅から送迎バスで10分",
-    checkin: "15:00 〜 / チェックアウト 〜12:00",
-    points: ["客室露天風呂で好きなだけ温泉", "夕食は部屋でゆっくり季節の会席", "記念日ケーキとスパークリングワイン付き", "浴衣・色浴衣の貸出あり"],
-    review: ["とにかく何もしない贅沢を味わえました。また来ます！（20代女性）", "部屋のお風呂から見える山がきれい。朝ごはんも最高。（30代カップル）"],
+    id: "hakone", name: "箱根湯本温泉 湯けむりの宿 だらり庵", kana: "はこねゆもとおんせん ゆけむりのやど だらりあん",
+    pref: "神奈川県", region: "関東", area: "箱根・湯河原・小田原", town: "箱根湯本",
+    photos: [
+      ["hakone1.jpg", "客室露天風呂付き和室「せせらぎ」"], ["hakone2.jpg", "渓流を望む客室露天風呂"],
+      ["hakone6.jpg", "広縁でのんびり"], ["hakone4.jpg", "季節の会席（一例）"],
+      ["hakone5.jpg", "ご朝食（一例）"], ["hakone3.jpg", "芦ノ湖から望む富士山（車で約30分）"],
+    ],
+    rating: 4.8, reviews: 1284, rv: { 部屋: 4.8, 風呂: 4.9, 料理_夕食: 4.8, 料理_朝食: 4.7, 接客: 4.8, 清潔感: 4.7 },
+    copy: "全室客室露天風呂付き。チェックアウト12時でとことん“だらだら”できる大人の隠れ宿",
+    desc: "早川のせせらぎを聞きながら、源泉かけ流しの客室露天風呂を好きなだけ。夕食はお部屋で季節の会席をゆっくりと。翌日は12時までのんびりお過ごしください。",
+    access: "箱根湯本駅より無料送迎バスで約10分（15:00〜18:00 随時運行）",
+    badges: [["b-red", "ポイント10%"], ["b-pink", "記念日"], ["b-line", "クーポン利用可"], ["b-line", "露天風呂付客室"]],
+    kodawari: ["温泉", "源泉かけ流し", "露天風呂付客室", "部屋食", "貸切風呂", "駐車場無料", "送迎あり", "レイトチェックアウト", "Wi-Fi", "記念日対応"],
+    checkin: "15:00（最終 19:00）", checkout: "12:00", rooms: 12, parking: "あり（無料・先着12台）",
+    spring: "アルカリ性単純温泉（源泉かけ流し）", addr: "神奈川県足柄下郡箱根町湯本 0-0-0",
+    plans: [
+      { id: "anniv", name: "【記念日・誕生日】ケーキ＆スパークリング付き♪客室露天でおこもり 季節の会席プラン", meal: "夕朝食付き（夕食：部屋食／朝食：部屋食）", room: "露天風呂付き和室 10畳＋広縁", price: 32800, img: "hakone1.jpg", badges: [["b-pink", "記念日"], ["b-red", "人気No.1"]], recommend: true },
+      { id: "std", name: "【スタンダード】源泉かけ流しの客室露天と旬の会席を愉しむ", meal: "夕朝食付き（部屋食）", room: "露天風呂付き和室 10畳", price: 28000, img: "hakone4.jpg", badges: [["b-line", "スタンダード"]] },
+      { id: "late", name: "【だらだら連泊】2泊以上でお得！12時チェックアウトで朝寝坊OK", meal: "夕朝食付き", room: "露天風呂付き和室 10畳", price: 25800, img: "hakone6.jpg", badges: [["b-or", "連泊割"]] },
+    ],
+    voices: [
+      { t: "何もしない贅沢！", u: "rin**** さん / 20代 / 女性 / カップル・夫婦", s: 5, d: "2026年10月", p: "お部屋の露天風呂から川の音が聞こえて最高でした。チェックアウトが12時なので朝もゆっくりでき、本当に“だらだら”できました。記念日のケーキも可愛くて大満足です。", r: "この度はご宿泊ありがとうございました。またのんびりしにいらしてください。（女将）" },
+      { t: "料理がとても美味しい", u: "hana**** さん / 30代 / 女性 / 友達", s: 5, d: "2026年9月", p: "部屋食なので周りを気にせずゆっくり食べられました。量も多すぎずちょうど良かったです。" },
+      { t: "送迎がありがたい", u: "yuta**** さん / 30代 / 男性 / カップル・夫婦", s: 4, d: "2026年8月", p: "駅からの送迎がスムーズでした。お風呂は熱すぎずずっと入っていられます。" },
+    ],
   },
   {
-    id: "kyoto",
-    name: "京都 町家ステイ ゆるり家",
-    area: "京都 > 祇園・東山",
-    emoji: "⛩️",
-    bg: "linear-gradient(135deg,#a18cd1,#fbc2eb)",
-    rating: 4.6, reviews: 842,
-    price: 24000,
-    catch: "築100年の町家を一棟貸し。坪庭を眺めながら朝寝坊できる、京都暮らし体験。",
-    tags: ["一棟貸し", "町家", "朝食付き", "駅近"],
-    plan: "【一棟貸し】京のおばんざい朝食付き",
-    access: "祇園四条駅から徒歩7分",
-    checkin: "16:00 〜 / チェックアウト 〜11:00",
-    points: ["檜風呂付きの一棟貸し", "朝食は近所のおばんざい屋さんから", "着物レンタル割引あり"],
-    review: ["暮らすように泊まれて楽しかった。（20代女性）"],
+    id: "kyoto", name: "京町家一棟貸し ゆるり家 祇園", kana: "きょうまちやいっとうがし ゆるりや ぎおん",
+    pref: "京都府", region: "関西", area: "祇園・東山・北白川", town: "祇園",
+    photos: [["kyoto3.jpg", "京のおばんざい朝食（一例）"], ["kyoto2.jpg", "宿周辺の街並み"]],
+    rating: 4.6, reviews: 842, rv: { 部屋: 4.7, 風呂: 4.3, 料理_夕食: 0, 料理_朝食: 4.6, 接客: 4.6, 清潔感: 4.7 },
+    copy: "築100年の京町家を一棟まるごと。坪庭を眺めて朝寝坊",
+    desc: "祇園の路地奥にひっそり佇む一棟貸しの町家。檜風呂とおばんざいの朝食で京都暮らしを体験。",
+    access: "京阪 祇園四条駅より徒歩7分",
+    badges: [["b-line", "一棟貸し"], ["b-line", "朝食付き"]],
+    kodawari: ["一棟貸し", "朝食付き", "駅近", "Wi-Fi"],
+    checkin: "16:00", checkout: "11:00", rooms: 1, parking: "なし", spring: "-", addr: "京都府京都市東山区 0-0",
+    plans: [
+      { id: "b", name: "【一棟貸し】京のおばんざい朝食付き", meal: "朝食付き", room: "町家一棟（〜4名）", price: 24000, img: "kyoto3.jpg", badges: [] },
+      { id: "s", name: "【素泊まり】自由気ままに京都ステイ", meal: "食事なし", room: "町家一棟（〜4名）", price: 19800, img: "kyoto2.jpg", badges: [] },
+    ],
+    voices: [{ t: "暮らすように泊まれた", u: "mika**** さん / 20代 / 女性 / 友達", s: 5, d: "2026年10月", p: "町家の雰囲気が素敵で、朝食も美味しかったです。" }],
   },
   {
-    id: "ishigaki",
-    name: "石垣島 ビーチリゾート ねそべりテラス",
-    area: "沖縄 > 石垣島",
-    emoji: "🏝️",
-    bg: "linear-gradient(135deg,#43e97b,#38f9d7)",
-    rating: 4.7, reviews: 2031,
-    price: 36000,
-    catch: "目の前はエメラルドグリーンの海。プールサイドのハンモックで一日中ねそべれます。",
-    tags: ["オーシャンビュー", "プール", "朝夕食付き", "空港送迎"],
-    plan: "【オーシャンビュー】南国ディナーブッフェ付き",
-    access: "新石垣空港から車で20分（無料送迎あり）",
-    checkin: "14:00 〜 / チェックアウト 〜11:00",
-    points: ["全室オーシャンビュー", "インフィニティプール", "星空ツアー無料"],
-    review: ["海の色が本当にきれい。何もしないで過ごしました。（30代女性）"],
+    id: "ishigaki", name: "石垣島ビーチリゾート ねそべりテラス", kana: "いしがきじまびーちりぞーと ねそべりてらす",
+    pref: "沖縄県", region: "九州・沖縄", area: "石垣島", town: "川平",
+    photos: [["ishigaki1.jpg", "目の前に広がる川平湾"], ["ishigaki2.jpg", "エメラルドグリーンの海"]],
+    rating: 4.7, reviews: 2031, rv: { 部屋: 4.6, 風呂: 4.3, 料理_夕食: 4.6, 料理_朝食: 4.7, 接客: 4.8, 清潔感: 4.7 },
+    copy: "全室オーシャンビュー。ハンモックで一日中ねそべる南国ステイ",
+    desc: "川平湾を見下ろす高台のリゾート。インフィニティプールと星空ツアーが人気。",
+    access: "新石垣空港より車で約30分（無料送迎あり・要予約）",
+    badges: [["b-red", "ポイント5%"], ["b-line", "オーシャンビュー"]],
+    kodawari: ["オーシャンビュー", "プール", "送迎あり", "駐車場無料"],
+    checkin: "14:00", checkout: "11:00", rooms: 48, parking: "あり（無料）", spring: "-", addr: "沖縄県石垣市川平 0-0",
+    plans: [
+      { id: "d", name: "【オーシャンビュー】南国ディナーブッフェ＆朝食付き", meal: "夕朝食付き", room: "オーシャンビューツイン", price: 36000, img: "ishigaki1.jpg", badges: [] },
+      { id: "b", name: "【朝食付き】島時間をのんびり満喫", meal: "朝食付き", room: "オーシャンビューツイン", price: 27500, img: "ishigaki2.jpg", badges: [] },
+    ],
+    voices: [{ t: "海がきれい", u: "aya**** さん / 30代 / 女性 / カップル・夫婦", s: 5, d: "2026年9月", p: "部屋からの景色が最高でした。" }],
   },
   {
-    id: "furano",
-    name: "富良野 ラベンダーの丘 ごろりロッジ",
-    area: "北海道 > 富良野・美瑛",
-    emoji: "💜",
-    bg: "linear-gradient(135deg,#c471f5,#fa71cd)",
-    rating: 4.5, reviews: 611,
-    price: 21000,
-    catch: "丘の上の小さなロッジ。暖炉の前のソファでごろりとしながら、北海道の恵みを。",
-    tags: ["暖炉", "朝夕食付き", "天然温泉", "絶景"],
-    plan: "【スタンダード】北海道ジンギスカンディナー付き",
-    access: "富良野駅から車で15分",
-    checkin: "15:00 〜 / チェックアウト 〜10:00",
-    points: ["暖炉のあるラウンジ", "とれたて野菜のディナー", "冬はスノーシュー体験"],
-    review: ["景色も料理も最高でした。（20代カップル）"],
+    id: "furano", name: "富良野 ラベンダーの丘 ごろりロッジ", kana: "ふらの らべんだーのおか ごろりろっじ",
+    pref: "北海道", region: "北海道", area: "富良野・美瑛・トマム", town: "富良野",
+    photos: [["furano2.jpg", "初夏のラベンダー畑"], ["furano3.jpg", "美瑛・青い池（車で約40分）"], ["furano1.jpg", "周辺の畑"]],
+    rating: 4.5, reviews: 611, rv: { 部屋: 4.4, 風呂: 4.3, 料理_夕食: 4.7, 料理_朝食: 4.6, 接客: 4.6, 清潔感: 4.5 },
+    copy: "暖炉のあるラウンジでごろり。北海道の恵みをたっぷりと",
+    desc: "丘の上の小さなロッジ。とれたて野菜のディナーと天然温泉で、ゆったりと流れる時間を。",
+    access: "JR富良野駅より車で約15分",
+    badges: [["b-line", "天然温泉"], ["b-line", "朝夕食付き"]],
+    kodawari: ["温泉", "駐車場無料", "Wi-Fi"],
+    checkin: "15:00", checkout: "10:00", rooms: 16, parking: "あり（無料）", spring: "ナトリウム塩化物泉", addr: "北海道富良野市 0-0",
+    plans: [{ id: "s", name: "【スタンダード】北海道ジンギスカンディナー付き", meal: "夕朝食付き", room: "洋室ツイン", price: 21000, img: "furano2.jpg", badges: [] }],
+    voices: [{ t: "料理が最高", u: "ken**** さん / 20代 / 男性 / カップル・夫婦", s: 5, d: "2026年7月", p: "野菜がとにかく美味しかったです。" }],
   },
   {
-    id: "kanazawa",
-    name: "金沢 ひがし茶屋街 宿 のんびり楼",
-    area: "石川 > 金沢",
-    emoji: "🍣",
-    bg: "linear-gradient(135deg,#ff9a9e,#fecfef)",
-    rating: 4.6, reviews: 977,
-    price: 26000,
-    catch: "茶屋街まで歩いてすぐ。のどぐろと加賀料理をゆっくり味わう、食い倒れ旅に。",
-    tags: ["和室", "朝夕食付き", "大浴場", "観光便利"],
-    plan: "【美食】のどぐろ会席プラン",
-    access: "金沢駅からバスで10分",
-    checkin: "15:00 〜 / チェックアウト 〜10:00",
-    points: ["加賀料理の会席", "金箔体験チケット付き", "茶屋街まで徒歩3分"],
-    review: ["ごはんが美味しすぎて食べすぎました。（30代女性）"],
+    id: "kanazawa", name: "金沢 ひがし茶屋街の宿 のんびり楼", kana: "かなざわ ひがしちゃやがいのやど のんびりろう",
+    pref: "石川県", region: "甲信越・北陸", area: "金沢", town: "東山",
+    photos: [["kanazawa2.jpg", "加賀会席（一例）"], ["kanazawa3.jpg", "近江町市場のお寿司（徒歩10分）"]],
+    rating: 4.6, reviews: 977, rv: { 部屋: 4.5, 風呂: 4.4, 料理_夕食: 4.8, 料理_朝食: 4.6, 接客: 4.7, 清潔感: 4.6 },
+    copy: "茶屋街まで徒歩3分。のどぐろと加賀料理を味わう美食旅",
+    desc: "古い町並みに溶け込む数寄屋造りの宿。北陸の旬を使った会席が自慢です。",
+    access: "JR金沢駅よりバスで約10分「橋場町」下車徒歩3分",
+    badges: [["b-line", "美食"], ["b-line", "観光便利"]],
+    kodawari: ["大浴場", "駐車場あり", "Wi-Fi"],
+    checkin: "15:00", checkout: "10:00", rooms: 20, parking: "あり（1泊1,000円）", spring: "-", addr: "石川県金沢市東山 0-0",
+    plans: [{ id: "n", name: "【美食】のどぐろ塩焼き付き 加賀会席プラン", meal: "夕朝食付き", room: "和室 8畳", price: 26000, img: "kanazawa2.jpg", badges: [] }],
+    voices: [{ t: "食べすぎました", u: "saki**** さん / 30代 / 女性 / 友達", s: 5, d: "2026年10月", p: "ごはんが美味しすぎました。" }],
   },
   {
-    id: "kusatsu",
-    name: "草津温泉 湯畑そば ぽかぽか館",
-    area: "群馬 > 草津温泉",
-    emoji: "🧖",
-    bg: "linear-gradient(135deg,#89f7fe,#66a6ff)",
-    rating: 4.4, reviews: 1532,
-    price: 19000,
-    catch: "湯畑まで徒歩1分。日本三名泉のお湯に何度でも浸かれる、湯めぐり好きの宿。",
-    tags: ["源泉かけ流し", "湯めぐり手形付き", "朝夕食付き"],
-    plan: "【湯めぐり】外湯手形付きスタンダードプラン",
-    access: "草津温泉バスターミナルから徒歩5分",
-    checkin: "15:00 〜 / チェックアウト 〜10:00",
-    points: ["湯畑まで徒歩1分", "外湯めぐり手形付き", "夜の湯畑ライトアップ"],
-    review: ["お湯が最高。肌がつるつるに。（20代女性）"],
+    id: "kusatsu", name: "草津温泉 湯畑そば ぽかぽか館", kana: "くさつおんせん ゆばたけそば ぽかぽかかん",
+    pref: "群馬県", region: "関東", area: "草津・万座・北軽井沢", town: "草津",
+    photos: [["kusatsu1.jpg", "湯畑（徒歩1分）"], ["kusatsu2.jpg", "夜の湯畑"], ["kusatsu3.jpg", "雪見露天風呂"]],
+    rating: 4.4, reviews: 1532, rv: { 部屋: 4.2, 風呂: 4.7, 料理_夕食: 4.3, 料理_朝食: 4.4, 接客: 4.4, 清潔感: 4.3 },
+    copy: "湯畑まで徒歩1分！日本三名泉で湯めぐり三昧",
+    desc: "自然湧出量日本一の草津のお湯を、館内の露天風呂と外湯めぐりで心ゆくまで。",
+    access: "草津温泉バスターミナルより徒歩5分",
+    badges: [["b-line", "源泉かけ流し"], ["b-red", "ポイント5%"]],
+    kodawari: ["温泉", "源泉かけ流し", "露天風呂", "駐車場無料"],
+    checkin: "15:00", checkout: "10:00", rooms: 30, parking: "あり（無料）", spring: "酸性・含硫黄-アルミニウム-硫酸塩・塩化物泉", addr: "群馬県吾妻郡草津町 0-0",
+    plans: [{ id: "y", name: "【湯めぐり】外湯めぐり手形付き スタンダードプラン", meal: "夕朝食付き", room: "和室 10畳", price: 19000, img: "kusatsu3.jpg", badges: [] }],
+    voices: [{ t: "お湯が最高", u: "nana**** さん / 20代 / 女性 / 家族", s: 4, d: "2026年2月", p: "肌がつるつるになりました。" }],
   },
 ];
 
 /* ===================================================== */
 
-const state = { view: "list", hotelId: null, booking: null };
 const app = document.getElementById("app");
-const yen = n => "¥" + n.toLocaleString("ja-JP");
-const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+const yen = n => "￥" + n.toLocaleString("ja-JP");
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const H = id => HOTELS.find(h => h.id === id);
+const P = (h, pid) => h.plans.find(p => p.id === pid);
 const canBook = h => BOOKABLE_ID === null || h.id === BOOKABLE_ID;
-const findHotel = id => HOTELS.find(h => h.id === id);
-const starStr = r => "★".repeat(Math.round(r)) + "☆".repeat(5 - Math.round(r));
+const stars = r => { const f = Math.round(r); return "★".repeat(f) + `<span style="color:#ddd">${"★".repeat(5 - f)}</span>`; };
+const pts = n => Math.floor(n * 0.02);
+const WD = "日月火水木金土";
 
-function isoDate(d) {
-  const z = n => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`;
-}
-function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
-function jpDate(iso) {
-  const d = new Date(iso + "T00:00:00");
-  return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日（${"日月火水木金土"[d.getDay()]}）`;
-}
-function nights(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
+function iso(d) { const z = n => String(n).padStart(2, "0"); return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`; }
+function parse(s) { return new Date(s + "T00:00:00"); }
+function addD(s, n) { const d = parse(s); d.setDate(d.getDate() + n); return iso(d); }
+function jp(s) { const d = parse(s); return `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}(${WD[d.getDay()]})`; }
+function jpLong(s) { const d = parse(s); return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日（${WD[d.getDay()]}）`; }
+const TODAY = iso(new Date());
 
-const search = {
-  checkin: isoDate(addDays(new Date(), 14)),
-  checkout: isoDate(addDays(new Date(), 15)),
-  adults: 2,
-  keyword: "",
+// 祝日（ざっくり）
+const HOLIDAYS = ["2026-11-23", "2027-01-01", "2027-01-11", "2027-02-11", "2027-02-23", "2027-03-21", "2027-03-22", "2027-04-29", "2027-05-03", "2027-05-04", "2027-05-05"];
+
+// 日付ごとの空室と料金（予約可の宿は ○ と △、それ以外は ×）
+function seed(str) { let h = 0; for (const c of str) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; }
+function dayInfo(h, plan, ds) {
+  if (ds < TODAY) return { st: "past" };
+  const d = parse(ds), wd = d.getDay();
+  const peak = wd === 6 || HOLIDAYS.includes(addD(ds, 1)) || (d.getMonth() === 11 && d.getDate() >= 28) || (d.getMonth() === 0 && d.getDate() <= 3);
+  const price = plan.price + (peak ? 6000 : wd === 5 ? 2000 : 0);
+  if (!canBook(h)) return { st: "ng", price };
+  const r = seed(h.id + plan.id + ds) % 10;
+  if (r === 0) return { st: "ng", price };
+  if (r <= 2 || peak) return { st: "few", left: 1 + (r % 2), price };
+  return { st: "ok", price };
+}
+
+/* ---------- state ---------- */
+const S = {
+  kw: "", checkin: addD(TODAY, 14), nights: 1, rooms: 1, adults: 2, sort: "rec",
+  f: { onsen: false, roten: false, heya: false, late: false, vacant: false },
+  calMonth: {}, // planKey -> "YYYY-MM"
+  bk: null,
 };
 
-function go(view, hotelId) {
-  state.view = view;
-  if (hotelId !== undefined) state.hotelId = hotelId;
-  render();
+/* ---------- router ---------- */
+window.addEventListener("hashchange", route);
+function nav(h) { if (location.hash === h) route(); else location.hash = h; }
+function route() {
+  const parts = (location.hash.replace(/^#\/?/, "") || "").split("/").filter(Boolean);
   window.scrollTo(0, 0);
+  if (parts[0] === "hotel" && H(parts[1])) return hotelPage(H(parts[1]), parts[2] || "top");
+  if (parts[0] === "book" && S.bk) return bookPage();
+  if (parts[0] === "confirm" && S.bk && S.bk.filled) return confirmPage();
+  if (parts[0] === "done" && S.bk && S.bk.no) return donePage();
+  if (parts[0] === "list") return listPage();
+  return topPage();
 }
 
-function render() {
-  if (state.view === "list") renderList();
-  else if (state.view === "detail") renderDetail();
-  else if (state.view === "form") renderForm();
-  else if (state.view === "confirm") renderConfirm();
-  else if (state.view === "done") renderDone();
-}
-
-/* ---------- 一覧 ---------- */
-function renderList() {
-  const kw = search.keyword.trim();
-  const list = HOTELS.filter(h => !kw || (h.name + h.area + h.tags.join("")).includes(kw));
-  // 予約可の宿を上に
-  list.sort((a, b) => canBook(b) - canBook(a));
-
-  app.innerHTML = `
-    <div class="search">
-      <div class="kw"><label>エリア・キーワード</label>
-        <input id="kw" placeholder="例：温泉、京都、沖縄" value="${esc(search.keyword)}"></div>
-      <div><label>チェックイン</label><input type="date" id="ci" value="${search.checkin}"></div>
-      <div><label>チェックアウト</label><input type="date" id="co" value="${search.checkout}"></div>
-      <div><label>大人</label>
-        <select id="ad">${[1,2,3,4].map(n => `<option ${n === search.adults ? "selected" : ""}>${n}</option>`).join("")}</select></div>
-      <div class="go"><button class="btn" id="sbtn" style="width:100%">検索</button></div>
-    </div>
-
-    <div class="campaign">🎁 <div><b>だらんスペシャルクーポン配布中！</b><br>今なら対象の宿が<b>最大100%OFF</b>（※大切な人からの贈りもの限定）</div></div>
-
-    <h2 class="sec">おすすめの旅先</h2>
-    <div class="count">${list.length}件の宿が見つかりました ／ ${jpDate(search.checkin)} から ${nights(search.checkin, search.checkout)}泊・大人${search.adults}名</div>
-    ${list.length ? list.map(cardHtml).join("") : `<div class="box">該当する宿が見つかりませんでした。</div>`}
-  `;
-
-  const apply = () => {
-    search.keyword = document.getElementById("kw").value;
-    search.checkin = document.getElementById("ci").value || search.checkin;
-    search.checkout = document.getElementById("co").value || search.checkout;
-    if (nights(search.checkin, search.checkout) < 1) search.checkout = isoDate(addDays(new Date(search.checkin), 1));
-    search.adults = +document.getElementById("ad").value;
-    renderList();
-  };
-  document.getElementById("sbtn").onclick = apply;
-  document.getElementById("kw").onkeydown = e => { if (e.key === "Enter") apply(); };
-  app.querySelectorAll(".plan").forEach(el => el.onclick = () => go("detail", el.dataset.id));
-}
-
-function cardHtml(h) {
-  const ok = canBook(h);
+/* ---------- search box ---------- */
+function searchBox(title) {
   return `
-  <div class="plan ${ok ? "" : "soldout"}" data-id="${h.id}">
-    <div class="thumb" style="background:${h.bg}"><span class="area">${esc(h.area)}</span>${h.emoji}</div>
-    <div class="body">
-      <h3>${esc(h.name)}</h3>
-      <div class="stars">${starStr(h.rating)}<em>${h.rating.toFixed(1)}</em><span>（クチコミ${h.reviews.toLocaleString()}件）</span></div>
-      <div class="catch">${esc(h.catch)}</div>
-      <div class="tags">${h.tags.map(t => `<span class="tag">${esc(t)}</span>`).join("")}</div>
+  <div class="sbox">
+    <div class="ttl">${title}</div>
+    <div class="sgrid">
+      <div class="kw"><label>エリア・宿名・キーワード</label><input id="s-kw" placeholder="例）箱根　温泉　露天風呂付き" value="${esc(S.kw)}"></div>
+      <div class="dt"><label>チェックイン</label><input type="date" id="s-ci" min="${TODAY}" value="${S.checkin}"></div>
+      <div><label>泊数</label><select id="s-n">${[1, 2, 3, 4, 5].map(n => `<option value="${n}" ${n === S.nights ? "selected" : ""}>${n}泊</option>`).join("")}</select></div>
+      <div><label>部屋数</label><select id="s-r">${[1, 2, 3].map(n => `<option value="${n}" ${n === S.rooms ? "selected" : ""}>${n}室</option>`).join("")}</select></div>
+      <div><label>大人/1室</label><select id="s-a">${[1, 2, 3, 4].map(n => `<option value="${n}" ${n === S.adults ? "selected" : ""}>${n}名</option>`).join("")}</select></div>
+      <div class="go"><button class="btn btn-or" id="s-go">検 索</button></div>
     </div>
-    <div class="side">
-      <div>
-        <span class="status ${ok ? "ok" : "ng"}">${ok ? "◎ 空室あり" : "× 満室"}</span>
-      </div>
-      <div>
-        <div class="price">${yen(h.price)}<small>〜 /人泊</small></div>
-        <div class="pt">${Math.floor(h.price * 0.02).toLocaleString()}pt たまる</div>
-      </div>
+    <div class="sopt">
+      <label><input type="checkbox" id="o-onsen" ${S.f.onsen ? "checked" : ""}>温泉</label>
+      <label><input type="checkbox" id="o-roten" ${S.f.roten ? "checked" : ""}>露天風呂付客室</label>
+      <label><input type="checkbox" id="o-heya" ${S.f.heya ? "checked" : ""}>部屋食</label>
+      <label><input type="checkbox" id="o-late" ${S.f.late ? "checked" : ""}>レイトチェックアウト</label>
+      <label><input type="checkbox" id="o-vacant" ${S.f.vacant ? "checked" : ""}>空室のある宿のみ</label>
     </div>
   </div>`;
 }
+function bindSearch() {
+  const g = id => document.getElementById(id);
+  const apply = () => {
+    S.kw = g("s-kw").value.trim();
+    S.checkin = g("s-ci").value && g("s-ci").value >= TODAY ? g("s-ci").value : S.checkin;
+    S.nights = +g("s-n").value; S.rooms = +g("s-r").value; S.adults = +g("s-a").value;
+    for (const k in S.f) S.f[k] = g("o-" + k).checked;
+    nav("#/list");
+  };
+  g("s-go").onclick = apply;
+  g("s-kw").onkeydown = e => { if (e.key === "Enter") apply(); };
+  for (const k in S.f) g("o-" + k).onchange = () => { if (location.hash.startsWith("#/list")) apply(); };
+}
 
-/* ---------- 詳細 ---------- */
-function renderDetail() {
-  const h = findHotel(state.hotelId);
-  const ok = canBook(h);
-  const n = Math.max(1, nights(search.checkin, search.checkout));
-  const total = h.price * search.adults * n;
-
+/* ---------- TOP ---------- */
+function topPage() {
+  const pick = HOTELS.slice().sort((a, b) => canBook(b) - canBook(a));
   app.innerHTML = `
-    <div class="crumb"><a onclick="go('list')">だらんトップ</a> ＞ ${esc(h.area)} ＞ ${esc(h.name)}</div>
-    <div class="hero" style="background:${h.bg}"><span class="area thumb-area" style="position:absolute;left:12px;top:12px;background:rgba(0,0,0,.55);color:#fff;padding:2px 8px;border-radius:3px">${esc(h.area)}</span>${h.emoji}</div>
-    <div class="detail">
-      <div class="box">
-        <h1>${esc(h.name)}</h1>
-        <div class="stars">${starStr(h.rating)}<em>${h.rating.toFixed(1)}</em><span>（クチコミ${h.reviews.toLocaleString()}件）</span></div>
-        <p style="font-size:14px">${esc(h.catch)}</p>
-        <div class="tags">${h.tags.map(t => `<span class="tag">${esc(t)}</span>`).join("")}</div>
+    ${searchBox(`<span>宿・ホテル</span>を探す`)}
+    <div class="banners">
+      <div class="bn bn1"><small>期間限定 ／ 大切な人からの贈りもの</small><big>だらんスペシャルクーポン<br>最大100%OFF</big></div>
+      <div class="bn bn2"><small>冬の温泉特集</small><big>露天風呂付き客室</big></div>
+      <div class="bn bn3"><small>誕生日・記念日に</small><big>アニバーサリー宿</big></div>
+    </div>
+    <div class="h-sec">人気の温泉地から探す</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px">
+      ${["箱根", "草津", "京都", "石垣島", "富良野", "金沢", "熱海", "別府", "由布院", "登別", "下呂", "有馬"].map(a => `<a data-kw="${a}">${a}</a>`).join("")}
+    </div>
+    <div class="h-sec">いま注目の宿</div>
+    <div class="points-list">
+      ${pick.slice(0, 3).map(h => `
+        <div style="cursor:pointer" data-h="${h.id}">
+          <img src="img/${h.photos[0][0]}" alt="">
+          <p><b>${esc(h.name)}</b>${esc(h.pref)} ＞ ${esc(h.area)}<br>
+          <span class="stars">${stars(h.rating)}</span><span class="score">${h.rating.toFixed(1)}</span>
+          <span class="price">${yen(Math.min(...h.plans.map(p => p.price)))}〜</span>/人</p>
+        </div>`).join("")}
+    </div>
+  `;
+  bindSearch();
+  app.querySelectorAll("[data-kw]").forEach(a => a.onclick = () => { S.kw = a.dataset.kw; nav("#/list"); });
+  app.querySelectorAll("[data-h]").forEach(a => a.onclick = () => nav("#/hotel/" + a.dataset.h));
+}
 
-        <h4>プラン</h4>
-        <p style="font-size:14px;margin:0">${esc(h.plan)}</p>
-
-        <h4>この宿のおすすめポイント</h4>
-        <ul>${h.points.map(p => `<li>${esc(p)}</li>`).join("")}</ul>
-
-        <h4>宿泊情報</h4>
-        <table class="info">
-          <tr><th>アクセス</th><td>${esc(h.access)}</td></tr>
-          <tr><th>時間</th><td>${esc(h.checkin)}</td></tr>
-        </table>
-
-        <h4>クチコミ</h4>
-        ${h.review.map(r => `<div class="review"><b>★★★★★</b><br>${esc(r)}</div>`).join("")}
+/* ---------- LIST ---------- */
+function filtered() {
+  let L = HOTELS.filter(h => {
+    const hay = h.name + h.kana + h.pref + h.area + h.town + h.kodawari.join() + h.copy;
+    if (S.kw && !S.kw.split(/\s+/).every(w => hay.includes(w))) return false;
+    if (S.f.onsen && !h.kodawari.includes("温泉")) return false;
+    if (S.f.roten && !h.kodawari.includes("露天風呂付客室")) return false;
+    if (S.f.heya && !h.kodawari.includes("部屋食")) return false;
+    if (S.f.late && !h.kodawari.includes("レイトチェックアウト")) return false;
+    if (S.f.vacant && !canBook(h)) return false;
+    return true;
+  });
+  const minP = h => Math.min(...h.plans.map(p => p.price));
+  if (S.sort === "rec") L.sort((a, b) => canBook(b) - canBook(a) || b.reviews - a.reviews);
+  if (S.sort === "cheap") L.sort((a, b) => minP(a) - minP(b));
+  if (S.sort === "rate") L.sort((a, b) => b.rating - a.rating);
+  if (S.sort === "pop") L.sort((a, b) => b.reviews - a.reviews);
+  return L;
+}
+function listPage() {
+  const L = filtered();
+  const out = addD(S.checkin, S.nights);
+  const regions = {};
+  HOTELS.forEach(h => regions[h.region] = (regions[h.region] || 0) + 1);
+  app.innerHTML = `
+    <div class="crumb"><a href="#/">だらんnet</a> ＞ 国内宿・ホテル ＞ 検索結果${S.kw ? `「${esc(S.kw)}」` : ""}</div>
+    ${searchBox(`<span>条件を変更</span>して探す`)}
+    <div class="lay" style="margin-top:14px">
+      <aside class="side">
+        <div class="blk"><h4>エリアから絞り込む</h4><div class="area-list">
+          <a data-kw="">すべて <span>(${HOTELS.length})</span></a>
+          ${Object.entries(regions).map(([r, n]) => `<a data-kw="${HOTELS.find(h => h.region === r).pref}">${r} <span>(${n})</span></a>`).join("")}
+        </div></div>
+        <div class="blk"><h4>こだわり条件</h4><div>
+          <label><input type="checkbox" data-f="onsen" ${S.f.onsen ? "checked" : ""}>温泉</label>
+          <label><input type="checkbox" data-f="roten" ${S.f.roten ? "checked" : ""}>露天風呂付客室</label>
+          <label><input type="checkbox" data-f="heya" ${S.f.heya ? "checked" : ""}>部屋食</label>
+          <label><input type="checkbox" data-f="late" ${S.f.late ? "checked" : ""}>レイトチェックアウト</label>
+          <label><input type="checkbox" data-f="vacant" ${S.f.vacant ? "checked" : ""}>空室あり</label>
+        </div></div>
+        <div class="blk"><h4>クチコミ評価</h4><div>
+          <label><input type="radio" name="rv" checked>指定なし</label>
+          <label><input type="radio" name="rv">4.5以上</label>
+          <label><input type="radio" name="rv">4.0以上</label>
+        </div></div>
+      </aside>
+      <section>
+        <div class="resbar">
+          <div class="cnt">該当宿 <b>${L.length}</b> 件</div>
+          <div class="sorts">
+            ${[["rec", "おすすめ順"], ["cheap", "料金が安い順"], ["rate", "クチコミ評価順"], ["pop", "人気順"]].map(([k, v]) => `<a data-sort="${k}" class="${S.sort === k ? "on" : ""}">${v}</a>`).join("")}
+          </div>
+        </div>
+        <div class="cond">📅 ${jp(S.checkin)} 〜 ${jp(out)}（${S.nights}泊）／ ${S.rooms}室 ／ 大人${S.adults}名　<span style="color:var(--sub)">※料金は1室${S.adults}名利用時の${S.nights}泊合計（税込）</span></div>
+        ${L.length ? L.map(hotelCard).join("") : `<div style="padding:30px;text-align:center;border:1px solid var(--line)">条件に合う宿が見つかりませんでした。条件を変更して再度検索してください。</div>`}
+      </section>
+    </div>`;
+  bindSearch();
+  app.querySelectorAll("[data-sort]").forEach(a => a.onclick = () => { S.sort = a.dataset.sort; listPage(); });
+  app.querySelectorAll(".side [data-kw]").forEach(a => a.onclick = () => { S.kw = a.dataset.kw; listPage(); window.scrollTo(0, 0); });
+  app.querySelectorAll("[data-f]").forEach(c => c.onchange = () => { S.f[c.dataset.f] = c.checked; listPage(); });
+  app.querySelectorAll("[data-plan]").forEach(b => b.onclick = () => { const [hid, pid] = b.dataset.plan.split(":"); startBooking(hid, pid, S.checkin); });
+}
+function stayTotal(h, plan, ci, n, adults, rooms) {
+  let t = 0;
+  for (let i = 0; i < n; i++) t += (dayInfo(h, plan, addD(ci, i)).price || plan.price);
+  return t * adults * rooms;
+}
+function stayStatus(h, plan, ci, n) {
+  let worst = "ok", left = 9;
+  for (let i = 0; i < n; i++) {
+    const d = dayInfo(h, plan, addD(ci, i));
+    if (d.st === "ng" || d.st === "past") return { st: "ng" };
+    if (d.st === "few") { worst = "few"; left = Math.min(left, d.left); }
+  }
+  return { st: worst, left };
+}
+function hotelCard(h) {
+  const ok = canBook(h);
+  const minPlan = h.plans.reduce((a, b) => a.price < b.price ? a : b);
+  const minTot = stayTotal(h, minPlan, S.checkin, S.nights, S.adults, 1);
+  return `
+  <div class="hcard ${ok ? "" : "sold"}">
+    <div class="hc-head">
+      <div>
+        <div>${h.badges.map(b => `<span class="badge ${b[0]}">${b[1]}</span>`).join("")}</div>
+        <h3><a href="#/hotel/${h.id}">${esc(h.name)}</a></h3>
+        <div class="area">${esc(h.pref)} ＞ ${esc(h.area)} ＞ ${esc(h.town)}</div>
       </div>
-
-      <div class="box sticky">
-        <div style="font-weight:700;margin-bottom:8px">料金シミュレーション</div>
-        <div class="sumrow"><span>チェックイン</span><span>${jpDate(search.checkin)}</span></div>
-        <div class="sumrow"><span>泊数</span><span>${n}泊</span></div>
-        <div class="sumrow"><span>人数</span><span>大人${search.adults}名</span></div>
-        <div class="sumrow"><span>1人1泊</span><span>${yen(h.price)}</span></div>
-        <div class="sumrow total"><span>合計（税込）</span><span>${yen(total)}</span></div>
-        <div style="margin-top:14px">
-          ${ok
-            ? `<button class="btn big" id="bookbtn">このプランを予約する</button>`
-            : `<div class="soldmsg">ごめんなさい、この日程は<b>満室</b>です。<br>ほかの宿をさがしてみてください。</div>
-               <button class="btn ghost big" style="margin-top:10px" onclick="go('list')">一覧にもどる</button>`}
+      <div class="hc-rv">
+        クチコミ総合<br><span class="stars">${stars(h.rating)}</span><span class="score">${h.rating.toFixed(1)}</span><br>
+        <a class="rv-n" href="#/hotel/${h.id}/review">クチコミ ${h.reviews.toLocaleString()}件</a>
+      </div>
+    </div>
+    <div class="hc-body">
+      <div class="hc-photo">
+        <a href="#/hotel/${h.id}"><img class="main" src="img/${h.photos[0][0]}" alt="" loading="lazy"></a>
+        <div class="subs">${h.photos.slice(1, 4).map(p => `<img src="img/${p[0]}" alt="" loading="lazy">`).join("")}</div>
+      </div>
+      <div class="hc-info">
+        <div class="copy">${esc(h.copy)}</div>
+        <p class="desc">${esc(h.desc)}</p>
+        <div class="acc">${esc(h.access)}</div>
+        <div class="hc-min">
+          <span>${S.nights}泊${S.adults}名 合計</span><span class="price">${yen(minTot)}〜</span>
+          <span style="color:var(--sub)">（大人1名 ${yen(minTot / S.adults)}〜）</span>
+          <span class="pt">獲得 ${pts(minTot).toLocaleString()}pt〜</span>
         </div>
       </div>
     </div>
+    <div class="plans">
+      ${h.plans.slice(0, 2).map(p => {
+        const st = stayStatus(h, p, S.checkin, S.nights);
+        const tot = stayTotal(h, p, S.checkin, S.nights, S.adults, 1);
+        return `
+        <div class="prow">
+          <div class="pn">${p.badges.map(b => `<span class="badge ${b[0]}">${b[1]}</span>`).join("")}<br><a href="#/hotel/${h.id}/plan">${esc(p.name)}</a>
+            <div class="meta">🍽 ${esc(p.meal)}　🛏 ${esc(p.room)}</div></div>
+          <div class="pp">${S.nights}泊${S.adults}名 合計(税込)<br><span class="price">${yen(tot)}</span><br>獲得 ${pts(tot).toLocaleString()}pt</div>
+          <div class="pa">
+            ${st.st === "ng"
+              ? `<span class="vac ng">× 満室</span><span class="btn btn-dis" style="width:100%;padding:7px 0">満室</span>`
+              : `<span class="vac ${st.st}">${st.st === "few" ? `残り${st.left}室` : "○ 空室あり"}</span><button class="btn btn-or" data-plan="${h.id}:${p.id}">予約する</button>`}
+          </div>
+        </div>`;
+      }).join("")}
+    </div>
+    <div class="hc-foot"><a href="#/hotel/${h.id}/plan">この宿のプラン一覧（${h.plans.length}件）を見る ＞</a></div>
+  </div>`;
+}
+
+/* ---------- HOTEL ---------- */
+function hotelPage(h, tab) {
+  const ok = canBook(h);
+  const tabs = [["top", "宿トップ"], ["plan", "プラン一覧"], ["photo", "写真"], ["review", "クチコミ"], ["map", "地図・アクセス"], ["info", "宿の詳細"]];
+  app.innerHTML = `
+    <div class="crumb"><a href="#/">だらんnet</a> ＞ <a data-kw="${esc(h.pref)}">${esc(h.region)}</a> ＞ <a data-kw="${esc(h.pref)}">${esc(h.pref)}</a> ＞ <a data-kw="${esc(h.area.split("・")[0])}">${esc(h.area)}</a> ＞ ${esc(h.name)}</div>
+    <div class="hp-head">
+      <div>
+        <div>${h.badges.map(b => `<span class="badge ${b[0]}">${b[1]}</span>`).join("")}</div>
+        <div class="kana">${esc(h.kana)}</div>
+        <h1>${esc(h.name)}</h1>
+        <div style="font-size:12px;color:var(--sub)">${esc(h.pref)} ＞ ${esc(h.area)} ＞ ${esc(h.town)}　｜　${esc(h.access)}</div>
+      </div>
+      <div class="rv">
+        <div style="font-size:11px">クチコミ総合</div>
+        <span class="stars" style="font-size:16px">${stars(h.rating)}</span> <span class="big">${h.rating.toFixed(1)}</span>
+        <div><a href="#/hotel/${h.id}/review">${h.reviews.toLocaleString()}件のクチコミ</a></div>
+      </div>
+    </div>
+    <div class="tabs">${tabs.map(([k, v]) => `<a href="#/hotel/${h.id}/${k}" class="${k === tab ? "on" : ""}">${v}</a>`).join("")}</div>
+    <div id="tabbody"></div>
   `;
-  if (ok) document.getElementById("bookbtn").onclick = () => {
-    state.booking = state.booking && state.booking.hotelId === h.id ? state.booking : {
-      hotelId: h.id, checkin: search.checkin, checkout: search.checkout, adults: search.adults,
-      name: "", kana: "", email: "", tel: "", arrival: "15:00", request: "",
-    };
-    go("form");
-  };
-}
+  app.querySelectorAll(".crumb [data-kw]").forEach(a => a.onclick = () => { S.kw = a.dataset.kw; nav("#/list"); });
+  const tb = document.getElementById("tabbody");
+  if (tab === "top") tb.innerHTML = hotelTop(h);
+  else if (tab === "plan") tb.innerHTML = planList(h);
+  else if (tab === "photo") tb.innerHTML = `<div class="points-list">${h.photos.map(p => `<div><img src="img/${p[0]}" alt=""><p>${esc(p[1])}</p></div>`).join("")}</div>`;
+  else if (tab === "review") tb.innerHTML = reviewBlock(h, true);
+  else if (tab === "map") tb.innerHTML = mapBlock(h);
+  else tb.innerHTML = specBlock(h);
 
-function stepsHtml(i) {
-  const names = ["プラン選択", "お客様情報入力", "内容の確認", "予約完了"];
-  return `<div class="steps">${names.map((n, k) => `<div class="${k === i ? "on" : k < i ? "done" : ""}">${k + 1}. ${n}</div>`).join("")}</div>`;
-}
-
-/* ---------- 入力 ---------- */
-function renderForm() {
-  const b = state.booking, h = findHotel(b.hotelId);
-  const times = ["15:00","15:30","16:00","16:30","17:00","17:30","18:00","19:00"];
-  app.innerHTML = `
-    ${stepsHtml(1)}
-    <div class="detail">
-      <div class="box form">
-        <h1 style="font-size:20px">お客様情報の入力</h1>
-        <div class="row two">
-          <div><label>チェックイン<span class="req">必須</span></label><input type="date" id="f-ci" value="${b.checkin}"></div>
-          <div><label>チェックアウト<span class="req">必須</span></label><input type="date" id="f-co" value="${b.checkout}"></div>
-          <div class="err" style="grid-column:1/-1">チェックアウトはチェックインより後の日付にしてください</div>
-        </div>
-        <div class="row two">
-          <div><label>大人</label><select id="f-ad">${[1,2,3,4].map(n => `<option ${n === b.adults ? "selected" : ""}>${n}</option>`).join("")}</select></div>
-          <div><label>到着予定時刻</label><select id="f-ar">${times.map(t => `<option ${t === b.arrival ? "selected" : ""}>${t}</option>`).join("")}</select></div>
-        </div>
-        <div class="row"><label>宿泊代表者 氏名<span class="req">必須</span></label><input id="f-name" placeholder="例：山田 花子" value="${esc(b.name)}"><div class="err">氏名を入力してください</div></div>
-        <div class="row"><label>フリガナ</label><input id="f-kana" placeholder="例：ヤマダ ハナコ" value="${esc(b.kana)}"></div>
-        <div class="row"><label>メールアドレス</label><input id="f-email" type="email" placeholder="example@daran.jp" value="${esc(b.email)}"></div>
-        <div class="row"><label>電話番号</label><input id="f-tel" type="tel" placeholder="090-0000-0000" value="${esc(b.tel)}"></div>
-        <div class="row"><label>宿へのご要望</label><textarea id="f-req" rows="3" placeholder="例：誕生日なので、ケーキにメッセージを入れてほしいです">${esc(b.request)}</textarea></div>
-        <div class="row"><label class="check"><input type="checkbox" id="f-agree"> 宿泊約款とキャンセルポリシーに同意する（だらだらすることに同意する）</label><div class="err">同意にチェックしてください</div></div>
-        <button class="btn big" id="next">確認画面へすすむ</button>
-        <div style="text-align:center;margin-top:10px"><a style="font-size:13px;cursor:pointer;color:#1a5fa8;text-decoration:underline" onclick="go('detail')">← 宿の詳細にもどる</a></div>
-      </div>
-      ${summaryBox(h, b)}
-    </div>`;
-
-  const read = () => {
-    b.checkin = document.getElementById("f-ci").value;
-    b.checkout = document.getElementById("f-co").value;
-    b.adults = +document.getElementById("f-ad").value;
-    b.arrival = document.getElementById("f-ar").value;
-    b.name = document.getElementById("f-name").value.trim();
-    b.kana = document.getElementById("f-kana").value.trim();
-    b.email = document.getElementById("f-email").value.trim();
-    b.tel = document.getElementById("f-tel").value.trim();
-    b.request = document.getElementById("f-req").value.trim();
-  };
-  ["f-ci","f-co","f-ad"].forEach(id => document.getElementById(id).onchange = () => {
-    read(); app.querySelector(".detail > .box:last-child").outerHTML = summaryBox(h, b);
+  // gallery
+  const gm = tb.querySelector(".gmain");
+  if (gm) tb.querySelectorAll(".gth img").forEach((im, i) => im.onclick = () => {
+    gm.src = im.src; tb.querySelector(".gcap").textContent = h.photos[i][1];
+    tb.querySelectorAll(".gth img").forEach(x => x.classList.remove("on")); im.classList.add("on");
   });
-  document.getElementById("next").onclick = () => {
-    read();
-    const rows = app.querySelectorAll(".form .row");
-    rows.forEach(r => r.classList.remove("bad"));
-    let good = true;
-    if (!b.checkin || !b.checkout || nights(b.checkin, b.checkout) < 1) { rows[0].classList.add("bad"); good = false; }
-    if (!b.name) { rows[2].classList.add("bad"); good = false; }
-    if (!document.getElementById("f-agree").checked) { rows[7].classList.add("bad"); good = false; }
-    if (good) go("confirm");
-  };
+  // calendars
+  tb.querySelectorAll(".cal-wrap").forEach(w => drawCal(w, h, P(h, w.dataset.plan)));
+  tb.querySelectorAll("[data-toggle]").forEach(b => b.onclick = () => {
+    const w = tb.querySelector(`.cal-wrap[data-plan="${b.dataset.toggle}"]`); w.classList.toggle("hidden");
+    b.textContent = w.classList.contains("hidden") ? "空室カレンダーを見る ▼" : "空室カレンダーを閉じる ▲";
+  });
+  tb.querySelectorAll("[data-plan]").forEach(b => b.onclick = () => startBooking(h.id, b.dataset.plan, S.checkin));
 }
-
-function summaryBox(h, b) {
-  const n = Math.max(1, nights(b.checkin, b.checkout));
+function hotelTop(h) {
+  const ok = canBook(h);
+  const minP = Math.min(...h.plans.map(p => p.price));
+  const rvKeys = Object.entries(h.rv).filter(([, v]) => v > 0);
   return `
-    <div class="box sticky">
-      <div style="font-size:24px;text-align:center;border-radius:6px;padding:12px;background:${h.bg}">${h.emoji}</div>
-      <div style="font-weight:700;margin:8px 0 4px">${esc(h.name)}</div>
-      <div style="font-size:12px;color:var(--sub);margin-bottom:8px">${esc(h.plan)}</div>
-      <div class="sumrow"><span>日程</span><span>${b.checkin ? jpDate(b.checkin) : "-"}</span></div>
-      <div class="sumrow"><span>泊数・人数</span><span>${n}泊・大人${b.adults}名</span></div>
-      <div class="sumrow"><span>宿泊料金</span><span>${yen(h.price * b.adults * n)}</span></div>
-      <div class="sumrow"><span>スペシャルクーポン</span><span style="color:var(--ok)">-${yen(h.price * b.adults * n)}</span></div>
-      <div class="sumrow total"><span>お支払い金額</span><span>${yen(0)}</span></div>
+    <div class="hp-top">
+      <div class="gal">
+        <img class="gmain" src="img/${h.photos[0][0]}" alt="">
+        <div class="gcap">${esc(h.photos[0][1])}</div>
+        <div class="gth">${h.photos.map((p, i) => `<img src="img/${p[0]}" class="${i ? "" : "on"}" alt="">`).join("")}</div>
+      </div>
+      <div>
+        <div class="infobox" style="margin-bottom:10px">
+          <h4>料金・空室</h4>
+          <div class="in">
+            <div style="font-size:12px">大人1名あたり</div>
+            <div><span class="price" style="font-size:24px">${yen(minP)}</span> 〜 <span style="font-size:11px;color:var(--sub)">（税込）</span></div>
+            <div style="font-size:12px;margin:4px 0 10px">${ok ? `<span class="vac ok" style="display:inline">○ 空室あり</span>` : `<span class="vac ng" style="display:inline">× 満室</span>`}　獲得ポイント 2%〜</div>
+            <a class="btn btn-or" href="#/hotel/${h.id}/plan" style="display:block;padding:10px 0;font-size:14px">プラン・空室を見る</a>
+          </div>
+        </div>
+        <div class="infobox rvbars">
+          <h4>クチコミ評価</h4>
+          <div class="in">
+            ${rvKeys.map(([k, v]) => `<div class="r"><span>${k.replace("_", "（") + (k.includes("_") ? "）" : "")}</span><span class="bar"><i style="width:${v / 5 * 100}%"></i></span><b>${v.toFixed(1)}</b></div>`).join("")}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="h-sec">${esc(h.copy)}</div>
+    <p style="margin:0 0 10px">${esc(h.desc)}</p>
+    <div class="h-sub">この宿のおすすめポイント</div>
+    <div class="points-list">
+      ${h.photos.slice(0, 3).map(p => `<div><img src="img/${p[0]}" alt=""><p><b>${esc(p[1])}</b></p></div>`).join("")}
+    </div>
+    <div class="h-sub">こだわり条件</div>
+    <div class="kodawari">${["温泉", "源泉かけ流し", "露天風呂付客室", "部屋食", "貸切風呂", "大浴場", "駐車場無料", "送迎あり", "レイトチェックアウト", "Wi-Fi", "記念日対応", "一棟貸し", "プール"].map(k => `<span class="${h.kodawari.includes(k) ? "on" : ""}">${k}</span>`).join("")}</div>
+    <div class="h-sub">おすすめプラン</div>
+    ${planCards(h, h.plans.slice(0, 1))}
+    <div class="h-sub">最新のクチコミ</div>
+    ${reviewBlock(h, false)}
+    <div style="text-align:right;margin-top:6px"><a href="#/hotel/${h.id}/review">クチコミをもっと見る ＞</a></div>
+  `;
+}
+function planList(h) {
+  return `<div class="cond">📅 ${jp(S.checkin)} 〜 ${S.nights}泊 ／ 大人${S.adults}名 ／ ${S.rooms}室　<span style="color:var(--sub)">※カレンダーから日付を選んで予約できます</span></div>${planCards(h, h.plans, true)}`;
+}
+function planCards(h, plans, openCal) {
+  return plans.map((p, i) => {
+    const st = stayStatus(h, p, S.checkin, S.nights);
+    const tot = stayTotal(h, p, S.checkin, S.nights, S.adults, 1);
+    return `
+    <div class="pcard">
+      <div class="ph">${p.badges.map(b => `<span class="badge ${b[0]}">${b[1]}</span>`).join("")}<br><a class="nm">${esc(p.name)}</a></div>
+      <div class="pb">
+        <img src="img/${p.img}" alt="">
+        <table>
+          <tr><th>食事</th><td>${esc(p.meal)}</td></tr>
+          <tr><th>部屋タイプ</th><td>${esc(p.room)}</td></tr>
+          <tr><th>チェックイン</th><td>${esc(h.checkin)}　／　チェックアウト ${esc(h.checkout)}</td></tr>
+          <tr><th>決済方法</th><td>オンラインカード決済・現地決済</td></tr>
+          <tr><th>特典</th><td>${p.recommend ? "ホールケーキ（4号）・スパークリングワイン1本・貸切風呂50分無料" : "だらんポイント2%"}</td></tr>
+        </table>
+      </div>
+      <div class="pf">
+        <div style="font-size:12px">${jp(S.checkin)}〜 ${S.nights}泊 大人${S.adults}名 合計(税込)　<span class="price">${yen(tot)}</span>　<span style="color:var(--or-dk);font-weight:700;font-size:11px">${pts(tot).toLocaleString()}pt</span>
+          <br>${st.st === "ng" ? `<span class="vac ng" style="display:inline">× この日程は満室です</span>` : st.st === "few" ? `<span class="vac few" style="display:inline">残り${st.left}室</span>` : `<span class="vac ok" style="display:inline">○ 空室あり</span>`}
+          <a data-toggle="${p.id}" style="margin-left:8px">${openCal && i === 0 ? "空室カレンダーを閉じる ▲" : "空室カレンダーを見る ▼"}</a></div>
+        ${st.st === "ng" ? `<span class="btn btn-dis" style="padding:9px 22px">満室</span>` : `<button class="btn btn-or" data-plan="${p.id}">予約する</button>`}
+      </div>
+      <div class="cal-wrap ${openCal && i === 0 ? "" : "hidden"}" data-plan="${p.id}"></div>
     </div>`;
+  }).join("");
+}
+function drawCal(w, h, plan) {
+  const key = h.id + plan.id;
+  const m = S.calMonth[key] || S.checkin.slice(0, 7);
+  const [y, mo] = m.split("-").map(Number);
+  const first = new Date(y, mo - 1, 1), days = new Date(y, mo, 0).getDate();
+  const thisMonth = TODAY.slice(0, 7);
+  let cells = "", d = 1 - first.getDay();
+  for (let r = 0; r < 6 && d <= days; r++) {
+    cells += "<tr>";
+    for (let c = 0; c < 7; c++, d++) {
+      if (d < 1 || d > days) { cells += "<td></td>"; continue; }
+      const ds = `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+      const inf = dayInfo(h, plan, ds);
+      const cls = [c === 0 ? "su" : c === 6 ? "sa" : "", HOLIDAYS.includes(ds) ? "hol" : "", inf.st === "past" ? "past" : inf.st === "ng" ? "ng" : "av", inf.st === "few" ? "few" : "", ds === S.checkin ? "sel" : ""].join(" ");
+      const mark = inf.st === "past" ? "" : inf.st === "ng" ? "×" : inf.st === "few" ? inf.left : "○";
+      cells += `<td class="${cls}" data-d="${ds}"><span class="d">${d}</span><span class="m">${mark}</span>${inf.st !== "past" && inf.st !== "ng" ? `<span class="p">${(inf.price / 10000).toFixed(1)}万円</span>` : ""}</td>`;
+    }
+    cells += "</tr>";
+  }
+  w.innerHTML = `
+    <div class="cal-nav">
+      <button data-mv="-1" ${m <= thisMonth ? "disabled" : ""}>＜ 前月</button>
+      <b>${y}年${mo}月</b>
+      <button data-mv="1">翌月 ＞</button>
+    </div>
+    <table class="cal"><tr>${[...WD].map((x, i) => `<th class="${i === 0 ? "su" : i === 6 ? "sa" : ""}">${x}</th>`).join("")}</tr>${cells}</table>
+    <div class="cal-leg"><b>○</b>空室あり　<i>数字</i>残り室数　×満室　／　料金は大人1名1泊あたり（税込）。日付をクリックすると予約画面へ進みます。</div>`;
+  w.querySelectorAll("[data-mv]").forEach(b => b.onclick = () => {
+    const nd = new Date(y, mo - 1 + +b.dataset.mv, 1);
+    S.calMonth[key] = iso(nd).slice(0, 7); drawCal(w, h, plan);
+  });
+  w.querySelectorAll("td.av").forEach(td => td.onclick = () => { S.checkin = td.dataset.d; startBooking(h.id, plan.id, td.dataset.d); });
+}
+function reviewBlock(h, all) {
+  const vs = all ? h.voices : h.voices.slice(0, 2);
+  return vs.map(v => `
+    <div class="rv-item">
+      <div><span class="stars">${stars(v.s)}</span> <b>${v.s}</b>　<span class="t">${esc(v.t)}</span></div>
+      <div class="u">${esc(v.u)}　｜　宿泊日 ${esc(v.d)}</div>
+      <p>${esc(v.p)}</p>
+      ${v.r ? `<div class="reply"><b>宿からの返信：</b>${esc(v.r)}</div>` : ""}
+    </div>`).join("");
+}
+function mapBlock(h) {
+  return `<div class="map"><span class="pin">📍</span><span class="lbl">${esc(h.name)}</span></div>
+    <table class="spec" style="margin-top:10px"><tr><th>住所</th><td>${esc(h.addr)}</td></tr><tr><th>交通アクセス</th><td>${esc(h.access)}</td></tr><tr><th>駐車場</th><td>${esc(h.parking)}</td></tr></table>`;
+}
+function specBlock(h) {
+  return `<table class="spec">
+    <tr><th>宿名</th><td>${esc(h.name)}</td></tr><tr><th>住所</th><td>${esc(h.addr)}</td></tr>
+    <tr><th>チェックイン</th><td>${esc(h.checkin)}</td></tr><tr><th>チェックアウト</th><td>${esc(h.checkout)}</td></tr>
+    <tr><th>総部屋数</th><td>${h.rooms}室</td></tr><tr><th>泉質</th><td>${esc(h.spring)}</td></tr>
+    <tr><th>駐車場</th><td>${esc(h.parking)}</td></tr><tr><th>カード</th><td>VISA / Master / JCB / AMEX / Diners</td></tr>
+    <tr><th>キャンセル規定</th><td>前日 50%　当日 80%　不泊 100%</td></tr></table>`;
 }
 
-/* ---------- 確認 ---------- */
-function renderConfirm() {
-  const b = state.booking, h = findHotel(b.hotelId);
-  const n = nights(b.checkin, b.checkout);
+/* ---------- BOOKING ---------- */
+function startBooking(hid, pid, ci) {
+  const h = H(hid);
+  if (!canBook(h)) return;
+  S.bk = {
+    hid, pid, ci, nights: S.nights, rooms: S.rooms, adults: S.adults,
+    sei: "", mei: "", seiK: "", meiK: "", email: "", tel: "", arrival: "15:00", pay: "card", usePt: false, coupon: true, req: "",
+    filled: false, no: null,
+  };
+  nav("#/book");
+}
+function flow(i) {
+  return `<div class="flow">${["プラン選択", "予約情報の入力", "予約内容の確認", "予約完了"].map((n, k) => `<div class="${k === i ? "on" : k < i ? "done" : ""}">${k + 1}. ${n}</div>`).join("")}</div>`;
+}
+function calc(b) {
+  const h = H(b.hid), p = P(h, b.pid);
+  const base = stayTotal(h, p, b.ci, b.nights, b.adults, b.rooms);
+  const tax = b.adults * b.rooms * b.nights * 150; // 入湯税
+  const ptUse = b.usePt ? Math.min(2026, base + tax) : 0;
+  const coupon = b.coupon ? base + tax - ptUse : 0;
+  return { h, p, base, tax, ptUse, coupon, total: base + tax - ptUse - coupon, earn: pts(base) };
+}
+function sumBox(b) {
+  const c = calc(b);
+  return `
+  <div class="sum"><h4>ご予約内容</h4><div class="in">
+    <img src="img/${c.p.img}" alt="">
+    <div class="hn">${esc(c.h.name)}</div><div class="pn">${esc(c.p.name)}</div>
+    <div class="r"><span>チェックイン</span><span>${jp(b.ci)}</span></div>
+    <div class="r"><span>チェックアウト</span><span>${jp(addD(b.ci, b.nights))}</span></div>
+    <div class="r"><span>泊数・室数</span><span>${b.nights}泊・${b.rooms}室</span></div>
+    <div class="r"><span>人数</span><span>大人${b.adults}名 × ${b.rooms}室</span></div>
+    <div class="r"><span>宿泊料金</span><span>${yen(c.base)}</span></div>
+    <div class="r"><span>入湯税</span><span>${yen(c.tax)}</span></div>
+    ${c.ptUse ? `<div class="r minus"><span>ポイント利用</span><span>-${yen(c.ptUse)}</span></div>` : ""}
+    ${c.coupon ? `<div class="r minus"><span>だらんスペシャルクーポン</span><span>-${yen(c.coupon)}</span></div>` : ""}
+    <div class="tot"><span>お支払い金額</span><span class="price">${yen(c.total)}</span></div>
+    <div style="text-align:right;font-size:11px;color:var(--or-dk);font-weight:700">獲得予定 ${c.earn.toLocaleString()}pt</div>
+  </div></div>`;
+}
+function bookPage() {
+  const b = S.bk, h = H(b.hid), p = P(h, b.pid);
+  const times = ["15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00"];
   app.innerHTML = `
-    ${stepsHtml(2)}
-    <div class="detail">
-      <div class="box">
-        <h1 style="font-size:20px">ご予約内容の確認</h1>
-        <table class="info">
-          <tr><th>宿</th><td>${esc(h.name)}</td></tr>
-          <tr><th>プラン</th><td>${esc(h.plan)}</td></tr>
-          <tr><th>日程</th><td>${jpDate(b.checkin)} 〜 ${jpDate(b.checkout)}（${n}泊）</td></tr>
-          <tr><th>人数</th><td>大人${b.adults}名</td></tr>
-          <tr><th>到着予定</th><td>${esc(b.arrival)}</td></tr>
-          <tr><th>代表者</th><td>${esc(b.name)}${b.kana ? `（${esc(b.kana)}）` : ""}</td></tr>
-          ${b.email ? `<tr><th>メール</th><td>${esc(b.email)}</td></tr>` : ""}
-          ${b.tel ? `<tr><th>電話</th><td>${esc(b.tel)}</td></tr>` : ""}
-          ${b.request ? `<tr><th>ご要望</th><td>${esc(b.request)}</td></tr>` : ""}
+    <div class="crumb"><a href="#/">だらんnet</a> ＞ <a href="#/hotel/${h.id}">${esc(h.name)}</a> ＞ 予約情報の入力</div>
+    ${flow(1)}
+    <div class="bk">
+      <div>
+        <div class="h-sub" style="margin-top:0">宿泊情報</div>
+        <table class="ftbl">
+          <tr id="r-ci"><th>チェックイン日<span class="req">必須</span></th><td><input type="date" id="b-ci" min="${TODAY}" value="${b.ci}">
+            <select id="b-n">${[1, 2, 3, 4, 5].map(n => `<option value="${n}" ${n === b.nights ? "selected" : ""}>${n}泊</option>`).join("")}</select>
+            <div class="err">選択した日程は満室です。別の日付を選んでください。</div></td></tr>
+          <tr><th>部屋数・人数<span class="req">必須</span></th><td>
+            <select id="b-r">${[1, 2, 3].map(n => `<option value="${n}" ${n === b.rooms ? "selected" : ""}>${n}室</option>`).join("")}</select>
+            大人 <select id="b-a">${[1, 2, 3, 4].map(n => `<option value="${n}" ${n === b.adults ? "selected" : ""}>${n}名</option>`).join("")}</select> / 1室</td></tr>
+          <tr><th>チェックイン予定時刻<span class="req">必須</span></th><td><select id="b-ar">${times.map(t => `<option ${t === b.arrival ? "selected" : ""}>${t}</option>`).join("")}</select><div class="note">夕食時間の都合上、19:00までにお越しください。</div></td></tr>
         </table>
-        <button class="btn big" id="ok" style="margin-top:18px">この内容で予約を確定する</button>
-        <button class="btn ghost big" style="margin-top:10px" onclick="go('form')">入力内容を修正する</button>
+
+        <div class="h-sub">宿泊代表者情報</div>
+        <table class="ftbl">
+          <tr id="r-name"><th>氏名（漢字）<span class="req">必須</span></th><td>姓 <input type="text" id="b-sei" size="8" value="${esc(b.sei)}" placeholder="山田">　名 <input type="text" id="b-mei" size="8" value="${esc(b.mei)}" placeholder="花子"><div class="err">氏名を入力してください</div></td></tr>
+          <tr id="r-kana"><th>氏名（カナ）<span class="req">必須</span></th><td>セイ <input type="text" id="b-seiK" size="8" value="${esc(b.seiK)}" placeholder="ヤマダ">　メイ <input type="text" id="b-meiK" size="8" value="${esc(b.meiK)}" placeholder="ハナコ"><div class="err">カナを入力してください</div></td></tr>
+          <tr><th>メールアドレス<span class="opt">任意</span></th><td><input type="email" id="b-email" class="w100" value="${esc(b.email)}" placeholder="example@daran.jp"><div class="note">予約確認メールの送信先（※実際には送信されません）</div></td></tr>
+          <tr><th>電話番号<span class="opt">任意</span></th><td><input type="tel" id="b-tel" value="${esc(b.tel)}" placeholder="090-0000-0000"></td></tr>
+        </table>
+
+        <div class="h-sub">お支払い・ポイント・クーポン</div>
+        <table class="ftbl">
+          <tr><th>お支払い方法<span class="req">必須</span></th><td class="radios">
+            <label><input type="radio" name="pay" value="card" ${b.pay === "card" ? "checked" : ""}> オンラインカード決済（事前決済）</label>
+            <label><input type="radio" name="pay" value="local" ${b.pay === "local" ? "checked" : ""}> 現地決済（宿でお支払い）</label></td></tr>
+          <tr><th>だらんポイント</th><td class="radios"><label><input type="checkbox" id="b-pt" ${b.usePt ? "checked" : ""}> 2,026ポイントを利用する</label></td></tr>
+          <tr><th>クーポン</th><td class="radios"><label><input type="checkbox" id="b-cp" ${b.coupon ? "checked" : ""}> <b style="color:var(--red)">だらんスペシャルクーポン（最大100%OFF）</b>を利用する</label></td></tr>
+        </table>
+
+        <div class="h-sub">宿へのご要望</div>
+        <table class="ftbl"><tr><th>ご要望・質問<span class="opt">任意</span></th><td><textarea id="b-req" rows="3" placeholder="例）誕生日のお祝いで利用します。ケーキに名前を入れていただけますか？">${esc(b.req)}</textarea></td></tr></table>
+
+        <div class="agree">
+          <b>■ キャンセル規定</b><br>前日：宿泊料金の50%／当日：80%／不泊：100%<br><br>
+          <b>■ 宿泊約款</b><br>当サイトはおあそびサイトです。実際の宿泊予約・決済は行われません。お客様は宿泊当日、なんにも考えずにだらだら過ごすものとします。<br><br>
+          <b>■ 個人情報の取り扱い</b><br>入力された情報はブラウザ内でのみ使用され、どこにも送信されません。
+        </div>
+        <table class="ftbl"><tr id="r-agree"><td style="text-align:center"><label style="cursor:pointer"><input type="checkbox" id="b-agree"> 上記の規約に同意する</label><div class="err">規約への同意が必要です</div></td></tr></table>
+
+        <div class="cta"><button class="btn btn-or" id="b-next">予約内容の確認へ進む</button></div>
+        <div class="back"><a href="#/hotel/${h.id}/plan">＜ プラン一覧に戻る</a></div>
       </div>
-      ${summaryBox(h, b)}
+      <div id="sumwrap">${sumBox(b)}</div>
     </div>`;
-  document.getElementById("ok").onclick = () => {
-    b.no = "DR" + Math.random().toString().slice(2, 10);
-    go("done");
+
+  const g = id => document.getElementById(id);
+  const read = () => {
+    b.ci = g("b-ci").value || b.ci; b.nights = +g("b-n").value; b.rooms = +g("b-r").value; b.adults = +g("b-a").value;
+    b.arrival = g("b-ar").value; b.sei = g("b-sei").value.trim(); b.mei = g("b-mei").value.trim();
+    b.seiK = g("b-seiK").value.trim(); b.meiK = g("b-meiK").value.trim(); b.email = g("b-email").value.trim(); b.tel = g("b-tel").value.trim();
+    b.pay = app.querySelector("input[name=pay]:checked").value; b.usePt = g("b-pt").checked; b.coupon = g("b-cp").checked; b.req = g("b-req").value.trim();
+  };
+  app.querySelectorAll(".ftbl input").forEach(i => i.addEventListener("input", () => i.closest("tr").classList.remove("bad")));
+  app.querySelector("#b-agree").addEventListener("change", e => e.target.closest("tr").classList.remove("bad"));
+  ["b-ci", "b-n", "b-r", "b-a", "b-pt", "b-cp"].forEach(id => g(id).onchange = () => { read(); g("sumwrap").innerHTML = sumBox(b); });
+  g("b-next").onclick = () => {
+    read();
+    app.querySelectorAll(".ftbl tr").forEach(r => r.classList.remove("bad"));
+    const bad = [];
+    if (b.ci < TODAY || stayStatus(h, p, b.ci, b.nights).st === "ng") bad.push("r-ci");
+    if (!b.sei || !b.mei) bad.push("r-name");
+    if (!b.seiK || !b.meiK) bad.push("r-kana");
+    if (!g("b-agree").checked) bad.push("r-agree");
+    bad.forEach(id => g(id).classList.add("bad"));
+    if (bad.length) { g(bad[0]).scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+    b.filled = true; nav("#/confirm");
   };
 }
-
-/* ---------- 完了 ---------- */
-function renderDone() {
-  const b = state.booking, h = findHotel(b.hotelId);
-  const n = nights(b.checkin, b.checkout);
+function confirmPage() {
+  const b = S.bk, c = calc(b);
   app.innerHTML = `
-    ${stepsHtml(3)}
-    <div class="box done">
-      <div class="big-icon">🎉</div>
-      <h1>ご予約が完了しました！</h1>
-      <p style="font-size:14px">${esc(b.name)} 様、だらんをご利用いただきありがとうございます。</p>
-      <div class="ticket">
-        <div class="no">予約番号　<b>${b.no}</b></div>
-        <div style="margin-top:10px;font-weight:700">${h.emoji} ${esc(h.name)}</div>
-        <div style="font-size:13px;margin-top:4px">${jpDate(b.checkin)} 〜 ${jpDate(b.checkout)}（${n}泊）・大人${b.adults}名</div>
-        <div style="font-size:13px">${esc(h.plan)}</div>
-        <div style="font-size:13px;color:var(--sub);margin-top:6px">${esc(h.access)}</div>
+    <div class="crumb"><a href="#/">だらんnet</a> ＞ <a href="#/hotel/${c.h.id}">${esc(c.h.name)}</a> ＞ 予約内容の確認</div>
+    ${flow(2)}
+    <div class="bk">
+      <div>
+        <p style="margin-top:0">以下の内容でよろしければ「予約を確定する」ボタンを押してください。</p>
+        <div class="h-sub" style="margin-top:0">宿泊情報</div>
+        <table class="ftbl">
+          <tr><th>宿名</th><td>${esc(c.h.name)}</td></tr>
+          <tr><th>プラン</th><td>${esc(c.p.name)}</td></tr>
+          <tr><th>部屋タイプ</th><td>${esc(c.p.room)}</td></tr>
+          <tr><th>食事</th><td>${esc(c.p.meal)}</td></tr>
+          <tr><th>日程</th><td>${jpLong(b.ci)} 〜 ${jpLong(addD(b.ci, b.nights))}（${b.nights}泊）</td></tr>
+          <tr><th>部屋数・人数</th><td>${b.rooms}室・大人${b.adults}名/室</td></tr>
+          <tr><th>チェックイン予定</th><td>${esc(b.arrival)}</td></tr>
+        </table>
+        <div class="h-sub">宿泊代表者</div>
+        <table class="ftbl">
+          <tr><th>氏名</th><td>${esc(b.sei)} ${esc(b.mei)}（${esc(b.seiK)} ${esc(b.meiK)}）</td></tr>
+          ${b.email ? `<tr><th>メールアドレス</th><td>${esc(b.email)}</td></tr>` : ""}
+          ${b.tel ? `<tr><th>電話番号</th><td>${esc(b.tel)}</td></tr>` : ""}
+          <tr><th>お支払い方法</th><td>${b.pay === "card" ? "オンラインカード決済" : "現地決済"}</td></tr>
+          ${b.req ? `<tr><th>ご要望</th><td>${esc(b.req)}</td></tr>` : ""}
+        </table>
+        <div class="cta"><button class="btn btn-or" id="c-ok">予約を確定する</button></div>
+        <div class="back"><a href="#/book">＜ 入力内容を修正する</a></div>
       </div>
-      ${DONE_MESSAGE_TITLE || DONE_MESSAGE_BODY ? `<div class="bday"><b>${DONE_MESSAGE_TITLE}</b>${DONE_MESSAGE_BODY}</div>` : ""}
-      <div style="margin-top:22px"><button class="btn ghost" onclick="state.booking=null;go('list')">トップへもどる</button></div>
+      ${sumBox(b)}
     </div>`;
+  document.getElementById("c-ok").onclick = () => {
+    const btn = document.getElementById("c-ok");
+    btn.disabled = true; btn.textContent = "予約処理中…";
+    setTimeout(() => { b.no = String(Math.floor(10000000 + Math.random() * 89999999)); nav("#/done"); }, 900);
+  };
+}
+function donePage() {
+  const b = S.bk, c = calc(b);
+  const out = addD(b.ci, b.nights);
+  app.innerHTML = `
+    ${flow(3)}
+    <div class="done-box">
+      <div style="font-size:40px">🎉</div>
+      <h1>ご予約が完了しました</h1>
+      <div>${esc(b.sei)} ${esc(b.mei)} 様、だらんnetをご利用いただきありがとうございます。</div>
+      <div class="done-no">予約番号　<b>${b.no}</b></div>
+      <div style="font-size:12px;color:var(--sub)">ご予約内容は「マイページ ＞ 予約確認・キャンセル」からご確認いただけます。</div>
+      ${DONE_MESSAGE_TITLE || DONE_MESSAGE_BODY ? `<div class="bday"><b>${DONE_MESSAGE_TITLE}</b>${DONE_MESSAGE_BODY}</div>` : ""}
+    </div>
+    <div class="mail">
+      <div class="mh">件名：【だらんnet】ご予約確認（予約番号：${b.no}）</div>
+<pre>${esc(b.sei)} ${esc(b.mei)} 様
+
+この度は だらんnet をご利用いただき、誠にありがとうございます。
+以下の内容でご予約を承りました。
+
+━━━━━━━━━━━━━━━━━━━━━━
+■予約番号　　：${b.no}
+■宿泊施設　　：${esc(c.h.name)}
+■プラン　　　：${esc(c.p.name)}
+■部屋タイプ　：${esc(c.p.room)}
+■チェックイン：${jpLong(b.ci)} ${esc(b.arrival)}
+■チェックアウト：${jpLong(out)} 〜${esc(c.h.checkout)}
+■泊数・室数　：${b.nights}泊・${b.rooms}室（大人${b.adults}名/室）
+■食事　　　　：${esc(c.p.meal)}
+■お支払い金額：${yen(c.total)}（宿泊料金 ${yen(c.base)} / クーポン割引 -${yen(c.coupon)}）
+■獲得予定ポイント：${c.earn.toLocaleString()}pt
+━━━━━━━━━━━━━━━━━━━━━━
+
+■アクセス
+${esc(c.h.access)}
+
+当日は、なんにも考えずにお越しください。
+スタッフ一同、心よりお待ちしております。
+
+だらんnet</pre>
+    </div>
+    <div class="cta"><a class="btn btn-gr" href="#/" style="padding:10px 30px;width:auto" onclick="S.bk=null">だらんnetトップへ</a></div>`;
 }
 
-render();
+route();
 </script>
 </body>
 </html>
