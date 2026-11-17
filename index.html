@@ -354,10 +354,10 @@
 
 // 空室がある（予約できる）宿の id。ほかの宿は全部「満室」になる。
 // 全部予約できるようにしたいときは null。
-const BOOKABLE_ID = "hakone";
+const BOOKABLE_ID = "cabin";
 
 // 検索結果に出す宿（何を検索してもこの宿だけが、この順番で出る）
-const SHOW_IDS = ["hakone", "kyoto", "ishigaki"];
+const SHOW_IDS = ["cabin", "kyoto", "ishigaki"];
 
 // 予約完了画面のメッセージ（いらなければ両方 "" にする）
 // 予約フォームにはじめから入っている名前
@@ -369,30 +369,29 @@ const DONE_MESSAGE_BODY  = "予約してくれてありがとう<br>いっぱい
 // 宿データ（写真は img/ フォルダ）
 const HOTELS = [
   {
-    id: "hakone", name: "箱根湯本温泉 湯けむりの宿 だらり庵", kana: "はこねゆもとおんせん ゆけむりのやど だらりあん",
-    pref: "神奈川県", region: "関東", area: "箱根・湯河原・小田原", town: "箱根湯本",
+    id: "cabin", name: "南仏インテリアのログハウス 一棟貸し", kana: "なんふついんてりあのろぐはうす いっとうがし",
+    pref: "ひみつの場所", region: "国内", area: "当日のおたのしみ", town: "森の中",
     photos: [
-      ["hakone1.jpg", "客室露天風呂付き和室「せせらぎ」"], ["hakone2.jpg", "渓流を望む客室露天風呂"],
-      ["hakone6.jpg", "広縁でのんびり"], ["hakone4.jpg", "季節の会席（一例）"],
-      ["hakone5.jpg", "ご朝食（一例）"], ["hakone3.jpg", "芦ノ湖から望む富士山（車で約30分）"],
+      ["cabin5.jpg", "南仏インテリアのリビング（薪ストーブ付き）"], ["cabin2.jpg", "ログハウス外観とウッドデッキ"],
+      ["cabin3.jpg", "お庭でBBQ"], ["cabin4.jpg", "夜は吹き抜けのロフトがライトアップ"],
+      ["cabin1.jpg", "ロフトから見下ろすリビング"], ["cabin6.jpg", "キッチン（調理器具・炊飯器あり）"],
     ],
-    rating: 4.8, reviews: 1284, rv: { 部屋: 4.8, 風呂: 4.9, 料理_夕食: 4.8, 料理_朝食: 4.7, 接客: 4.8, 清潔感: 4.7 },
-    copy: "全室客室露天風呂付き。チェックアウト12時でとことん“だらだら”できる大人の隠れ宿",
-    desc: "早川のせせらぎを聞きながら、源泉かけ流しの客室露天風呂を好きなだけ。夕食はお部屋で季節の会席をゆっくりと。翌日は12時までのんびりお過ごしください。",
-    access: "箱根湯本駅より無料送迎バスで約10分（15:00〜18:00 随時運行）",
-    badges: [["b-red", "ポイント10%"], ["b-pink", "記念日"], ["b-pink", "お誕生日クーポン対象"], ["b-line", "露天風呂付客室"]],
-    kodawari: ["温泉", "源泉かけ流し", "露天風呂付客室", "部屋食", "貸切風呂", "駐車場無料", "送迎あり", "レイトチェックアウト", "Wi-Fi", "記念日対応"],
-    checkin: "15:00（最終 19:00）", checkout: "12:00", rooms: 12, parking: "あり（無料・先着12台）",
-    spring: "アルカリ性単純温泉（源泉かけ流し）", addr: "神奈川県足柄下郡箱根町湯本 0-0-0",
+    rating: 4.9, reviews: 328, rv: { 部屋: 4.9, 設備_アメニティ: 4.8, 立地: 4.7, 清潔感: 4.9, ホスト対応: 5.0 },
+    copy: "かわいらしい南仏インテリアのログハウス　星空の下ＢＢＱや森林浴、癒されながら最高の思い出を。",
+    desc: "森に囲まれた一棟貸しのログハウス。薪ストーブのあるリビングでごろごろ、吹き抜けのロフトで朝寝坊、夜はお庭で星空BBQ。ふたりだけの時間を、だら〜んとお過ごしください。",
+    access: "当日のおたのしみ（車でお連れします）",
+    badges: [["b-pink", "お誕生日クーポン対象"], ["b-red", "ポイント10%"], ["b-line", "一棟貸し"], ["b-line", "BBQ"]],
+    kodawari: ["一棟貸し", "BBQ", "薪ストーブ", "キッチン付き", "駐車場無料", "Wi-Fi", "記念日対応"],
+    checkin: "15:00", checkout: "11:00", rooms: 1, parking: "あり（無料）", spring: "-", addr: "当日のおたのしみ",
     plans: [
-      { id: "anniv", name: "【記念日・誕生日】ケーキ＆スパークリング付き♪客室露天でおこもり 季節の会席プラン", meal: "夕朝食付き（夕食：部屋食／朝食：部屋食）", room: "露天風呂付き和室 10畳＋広縁", price: 32800, img: "hakone1.jpg", badges: [["b-pink", "記念日"], ["b-red", "人気No.1"]], recommend: true },
-      { id: "std", name: "【スタンダード】源泉かけ流しの客室露天と旬の会席を愉しむ", meal: "夕朝食付き（部屋食）", room: "露天風呂付き和室 10畳", price: 28000, img: "hakone4.jpg", badges: [["b-line", "スタンダード"]] },
-      { id: "late", name: "【だらだら連泊】2泊以上でお得！12時チェックアウトで朝寝坊OK", meal: "夕朝食付き", room: "露天風呂付き和室 10畳", price: 25800, img: "hakone6.jpg", badges: [["b-or", "連泊割"]] },
+      { id: "bday", name: "【お誕生日・記念日】一棟まるごと貸切♪星空BBQセット付き ログハウスでおこもりプラン", meal: "夕食：BBQセット（食材・道具つき）／朝食：なし", room: "ログハウス一棟（リビング＋ロフト）", price: 18000, img: "cabin3.jpg", badges: [["b-pink", "お誕生日"], ["b-red", "人気No.1"]], recommend: true },
+      { id: "std", name: "【素泊まり】南仏インテリアのログハウスを一棟貸切", meal: "食事なし（キッチン利用可）", room: "ログハウス一棟（リビング＋ロフト）", price: 14000, img: "cabin5.jpg", badges: [["b-line", "スタンダード"]] },
+      { id: "late", name: "【だらだら連泊】2泊以上でお得！薪ストーブの前でのんびり", meal: "食事なし（キッチン利用可）", room: "ログハウス一棟（リビング＋ロフト）", price: 12500, img: "cabin1.jpg", badges: [["b-or", "連泊割"]] },
     ],
     voices: [
-      { t: "何もしない贅沢！", u: "rin**** さん / 20代 / 女性 / カップル・夫婦", s: 5, d: "2026年10月", p: "お部屋の露天風呂から川の音が聞こえて最高でした。チェックアウトが12時なので朝もゆっくりでき、本当に“だらだら”できました。記念日のケーキも可愛くて大満足です。", r: "この度はご宿泊ありがとうございました。またのんびりしにいらしてください。（女将）" },
-      { t: "料理がとても美味しい", u: "hana**** さん / 30代 / 女性 / 友達", s: 5, d: "2026年9月", p: "部屋食なので周りを気にせずゆっくり食べられました。量も多すぎずちょうど良かったです。" },
-      { t: "送迎がありがたい", u: "yuta**** さん / 30代 / 男性 / カップル・夫婦", s: 4, d: "2026年8月", p: "駅からの送迎がスムーズでした。お風呂は熱すぎずずっと入っていられます。" },
+      { t: "インテリアが本当にかわいい！", u: "mai**** さん / 20代 / 女性 / カップル・夫婦", s: 5, d: "2026年10月", p: "写真どおり、いやそれ以上にかわいいお部屋でした。ソファでごろごろして、夜はお庭でBBQ。星がとってもきれいでした。", r: "ご宿泊ありがとうございました。またふたりでのんびりしにいらしてください。（オーナー）" },
+      { t: "夜のロフトが最高", u: "sho**** さん / 30代 / 男性 / カップル・夫婦", s: 5, d: "2026年9月", p: "ライトアップされたロフトがすごくおしゃれ。薪ストーブもあたたかくて、ずっとだらだらしていました。" },
+      { t: "森林浴で癒されました", u: "yui**** さん / 20代 / 女性 / 友達", s: 5, d: "2026年8月", p: "まわりが静かで空気がおいしい。キッチンも使いやすかったです。" },
     ],
   },
   {
@@ -795,7 +794,7 @@ function hotelTop(h) {
       ${h.photos.slice(0, 3).map(p => `<div><img src="img/${p[0]}" alt=""><p><b>${esc(p[1])}</b></p></div>`).join("")}
     </div>
     <div class="h-sub">こだわり条件</div>
-    <div class="kodawari">${["温泉", "源泉かけ流し", "露天風呂付客室", "部屋食", "貸切風呂", "大浴場", "駐車場無料", "送迎あり", "レイトチェックアウト", "Wi-Fi", "記念日対応", "一棟貸し", "プール"].map(k => `<span class="${h.kodawari.includes(k) ? "on" : ""}">${k}</span>`).join("")}</div>
+    <div class="kodawari">${["一棟貸し", "BBQ", "薪ストーブ", "キッチン付き", "温泉", "露天風呂付客室", "部屋食", "駐車場無料", "送迎あり", "Wi-Fi", "記念日対応", "プール"].map(k => `<span class="${h.kodawari.includes(k) ? "on" : ""}">${k}</span>`).join("")}</div>
     <div class="h-sub">おすすめプラン</div>
     ${planCards(h, h.plans.slice(0, 1))}
     <div class="h-sub">最新のクチコミ</div>
@@ -820,7 +819,7 @@ function planCards(h, plans, openCal) {
           <tr><th>部屋タイプ</th><td>${esc(p.room)}</td></tr>
           <tr><th>チェックイン</th><td>${esc(h.checkin)}　／　チェックアウト ${esc(h.checkout)}</td></tr>
           <tr><th>決済方法</th><td>オンラインカード決済・現地決済</td></tr>
-          <tr><th>特典</th><td>${p.recommend ? "ホールケーキ（4号）・スパークリングワイン1本・貸切風呂50分無料" : "だらんポイント2%"}</td></tr>
+          <tr><th>特典</th><td>${p.recommend ? "BBQセット（お肉・野菜・道具）・バースデーケーキ・スパークリングワイン1本" : "だらんポイント2%"}</td></tr>
         </table>
       </div>
       <div class="pf">
@@ -906,7 +905,7 @@ function flow(i) {
 function calc(b) {
   const h = H(b.hid), p = P(h, b.pid);
   const base = stayTotal(h, p, b.ci, b.nights, b.adults, b.rooms);
-  const tax = b.adults * b.rooms * b.nights * 150; // 入湯税
+  const tax = 3000 * b.rooms; // 清掃料
   const ptUse = b.usePt ? Math.min(2026, base + tax) : 0;
   const coupon = b.coupon ? base + tax - ptUse : 0;
   return { h, p, base, tax, ptUse, coupon, total: base + tax - ptUse - coupon, earn: pts(base) };
@@ -922,7 +921,7 @@ function sumBox(b) {
     <div class="r"><span>泊数・室数</span><span>${b.nights}泊・${b.rooms}室</span></div>
     <div class="r"><span>人数</span><span>大人${b.adults}名 × ${b.rooms}室</span></div>
     <div class="r"><span>宿泊料金</span><span>${yen(c.base)}</span></div>
-    <div class="r"><span>入湯税</span><span>${yen(c.tax)}</span></div>
+    <div class="r"><span>清掃料</span><span>${yen(c.tax)}</span></div>
     ${c.ptUse ? `<div class="r minus"><span>ポイント利用</span><span>-${yen(c.ptUse)}</span></div>` : ""}
     ${c.coupon ? `<div class="r minus"><span>お誕生日クーポン（100%OFF）</span><span>-${yen(c.coupon)}</span></div>` : ""}
     <div class="tot"><span>お支払い金額</span><span class="price">${yen(c.total)}</span></div>
@@ -945,7 +944,7 @@ function bookPage() {
           <tr><th>部屋数・人数<span class="req">必須</span></th><td>
             <select id="b-r">${[1, 2, 3].map(n => `<option value="${n}" ${n === b.rooms ? "selected" : ""}>${n}室</option>`).join("")}</select>
             大人 <select id="b-a">${[1, 2, 3, 4].map(n => `<option value="${n}" ${n === b.adults ? "selected" : ""}>${n}名</option>`).join("")}</select> / 1室</td></tr>
-          <tr><th>チェックイン予定時刻<span class="req">必須</span></th><td><select id="b-ar">${times.map(t => `<option ${t === b.arrival ? "selected" : ""}>${t}</option>`).join("")}</select><div class="note">夕食時間の都合上、19:00までにお越しください。</div></td></tr>
+          <tr><th>チェックイン予定時刻<span class="req">必須</span></th><td><select id="b-ar">${times.map(t => `<option ${t === b.arrival ? "selected" : ""}>${t}</option>`).join("")}</select><div class="note">セルフチェックインです。到着時間の目安をお知らせください。</div></td></tr>
         </table>
 
         <div class="h-sub">宿泊代表者情報</div>
