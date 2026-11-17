@@ -422,23 +422,23 @@ const HOTELS = [
     pref: "ひみつの場所", region: "国内", area: "当日のおたのしみ", town: "森の中",
     photos: [
       ["cabin5.jpg", "南仏インテリアのリビング（薪ストーブ付き）"], ["cabin2.jpg", "ログハウス外観とウッドデッキ"],
-      ["cabin3.jpg", "お庭でBBQ"], ["cabin4.jpg", "夜は吹き抜けのロフトがライトアップ"],
+      ["cabin3.jpg", "お庭とウッドデッキ"], ["cabin4.jpg", "夜は吹き抜けのロフトがライトアップ"],
       ["cabin1.jpg", "ロフトから見下ろすリビング"], ["cabin6.jpg", "キッチン（調理器具・炊飯器あり）"],
     ],
     rating: 4.9, reviews: 328, rv: { 部屋: 4.9, 設備_アメニティ: 4.8, 立地: 4.7, 清潔感: 4.9, ホスト対応: 5.0 },
     copy: "かわいらしい南仏インテリアのログハウス　星空の下ＢＢＱや森林浴、癒されながら最高の思い出を。",
-    desc: "森に囲まれた一棟貸しのログハウス。薪ストーブのあるリビングでごろごろ、吹き抜けのロフトで朝寝坊、夜はお庭で星空BBQ。ふたりだけの時間を、だら〜んとお過ごしください。",
+    desc: "森に囲まれた一棟貸しのログハウス。薪ストーブのあるリビングでごろごろ、吹き抜けのロフトで朝寝坊、夜はシェフの特別ディナー。ふたりだけの時間を、だら〜んとお過ごしください。",
     access: "当日のおたのしみ（車でお連れします）",
-    badges: [["b-pink", "お誕生日クーポン対象"], ["b-red", "ポイント10%"], ["b-line", "一棟貸し"], ["b-line", "BBQ"]],
-    kodawari: ["一棟貸し", "BBQ", "薪ストーブ", "キッチン付き", "駐車場無料", "Wi-Fi", "記念日対応"],
+    badges: [["b-pink", "お誕生日クーポン対象"], ["b-red", "ポイント10%"], ["b-line", "一棟貸し"], ["b-line", "特別ディナー"]],
+    kodawari: ["一棟貸し", "特別ディナー", "薪ストーブ", "キッチン付き", "駐車場無料", "Wi-Fi", "記念日対応"],
     checkin: "15:00", checkout: "11:00", rooms: 1, parking: "あり（無料）", spring: "-", addr: "当日のおたのしみ",
     plans: [
-      { id: "bday", name: "【お誕生日・記念日】一棟まるごと貸切♪星空BBQセット付き ログハウスでおこもりプラン", meal: "夕食：BBQセット（食材・道具つき）／朝食：なし", room: "ログハウス一棟（リビング＋ロフト）", price: 18000, img: "cabin3.jpg", badges: [["b-pink", "お誕生日"], ["b-red", "人気No.1"]], recommend: true },
+      { id: "bday", name: "【お誕生日・記念日】一棟まるごと貸切♪特別ディナー付き ログハウスでおこもりプラン", meal: "夕食：特別ディナー（シェフの気まぐれ）／朝食：なし", room: "ログハウス一棟（リビング＋ロフト）", price: 18000, img: "cabin4.jpg", badges: [["b-pink", "お誕生日"], ["b-red", "人気No.1"]], recommend: true },
       { id: "std", name: "【素泊まり】南仏インテリアのログハウスを一棟貸切", meal: "食事なし（キッチン利用可）", room: "ログハウス一棟（リビング＋ロフト）", price: 14000, img: "cabin5.jpg", badges: [["b-line", "スタンダード"]] },
       { id: "late", name: "【だらだら連泊】2泊以上でお得！薪ストーブの前でのんびり", meal: "食事なし（キッチン利用可）", room: "ログハウス一棟（リビング＋ロフト）", price: 12500, img: "cabin1.jpg", badges: [["b-or", "連泊割"]] },
     ],
     voices: [
-      { t: "インテリアが本当にかわいい！", u: "mai**** さん / 20代 / 女性 / カップル・夫婦", s: 5, d: "2026年10月", p: "写真どおり、いやそれ以上にかわいいお部屋でした。ソファでごろごろして、夜はお庭でBBQ。星がとってもきれいでした。", r: "ご宿泊ありがとうございました。またふたりでのんびりしにいらしてください。（オーナー）" },
+      { t: "インテリアが本当にかわいい！", u: "mai**** さん / 20代 / 女性 / カップル・夫婦", s: 5, d: "2026年10月", p: "写真どおり、いやそれ以上にかわいいお部屋でした。ソファでごろごろして、夜は特別ディナー。帰りに見た星がとってもきれいでした。", r: "ご宿泊ありがとうございました。またふたりでのんびりしにいらしてください。（オーナー）" },
       { t: "夜のロフトが最高", u: "sho**** さん / 30代 / 男性 / カップル・夫婦", s: 5, d: "2026年9月", p: "ライトアップされたロフトがすごくおしゃれ。薪ストーブもあたたかくて、ずっとだらだらしていました。" },
       { t: "森林浴で癒されました", u: "yui**** さん / 20代 / 女性 / 友達", s: 5, d: "2026年8月", p: "まわりが静かで空気がおいしい。キッチンも使いやすかったです。" },
     ],
@@ -699,7 +699,7 @@ function topPage() {
       <div class="track">
         <div class="slide" data-go="#hotel-cabin"><img src="img/cabin5.jpg" alt=""><div class="cap"><small>Rinaさん限定</small><big>お誕生日クーポン<br>100%OFF</big><span>対象の宿がまるごと無料に</span></div></div>
         <div class="slide" data-go="#list"><img src="img/shousuke3.jpg" alt=""><div class="cap"><small>冬の温泉特集</small><big>絶景露天風呂で<br>ぬくぬく旅</big><span>人気の温泉宿を見る</span></div></div>
-        <div class="slide" data-go="#hotel-cabin"><img src="img/cabin4.jpg" alt=""><div class="cap"><small>記念日におすすめ</small><big>ふたりきりの<br>一棟貸しステイ</big><span>星空BBQつきプランも</span></div></div>
+        <div class="slide" data-go="#hotel-cabin"><img src="img/cabin4.jpg" alt=""><div class="cap"><small>記念日におすすめ</small><big>ふたりきりの<br>一棟貸しステイ</big><span>特別ディナー付きプランも</span></div></div>
       </div>
       <button class="arr l" data-d="-1" aria-label="前へ">‹</button><button class="arr r" data-d="1" aria-label="次へ">›</button>
       <div class="dots"><i class="on"></i><i></i><i></i></div>
@@ -930,7 +930,7 @@ function hotelTop(h) {
       ${h.photos.slice(0, 3).map(p => `<div><img src="img/${p[0]}" alt=""><p><b>${esc(p[1])}</b></p></div>`).join("")}
     </div>
     <div class="h-sub">こだわり条件</div>
-    <div class="kodawari">${["一棟貸し", "BBQ", "薪ストーブ", "キッチン付き", "温泉", "露天風呂付客室", "部屋食", "駐車場無料", "送迎あり", "Wi-Fi", "記念日対応", "プール"].map(k => `<span class="${h.kodawari.includes(k) ? "on" : ""}">${k}</span>`).join("")}</div>
+    <div class="kodawari">${["一棟貸し", "特別ディナー", "薪ストーブ", "キッチン付き", "温泉", "露天風呂付客室", "部屋食", "駐車場無料", "送迎あり", "Wi-Fi", "記念日対応", "プール"].map(k => `<span class="${h.kodawari.includes(k) ? "on" : ""}">${k}</span>`).join("")}</div>
     <div class="h-sub">おすすめプラン</div>
     ${planCards(h, h.plans.slice(0, 1))}
     <div class="h-sub">最新のクチコミ</div>
@@ -955,7 +955,7 @@ function planCards(h, plans, openCal) {
           <tr><th>部屋タイプ</th><td>${esc(p.room)}</td></tr>
           <tr><th>チェックイン</th><td>${esc(h.checkin)}　／　チェックアウト ${esc(h.checkout)}</td></tr>
           <tr><th>決済方法</th><td>オンラインカード決済・現地決済</td></tr>
-          <tr><th>特典</th><td>${p.recommend ? "BBQセット（お肉・野菜・道具）・バースデーケーキ・スパークリングワイン1本" : "だらんポイント2%"}</td></tr>
+          <tr><th>特典</th><td>${p.recommend ? "特別ディナー シェフの気まぐれ" : "だらんポイント2%"}</td></tr>
         </table>
       </div>
       <div class="pf">
