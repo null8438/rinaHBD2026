@@ -435,8 +435,8 @@ const HOTELS = [
     checkin: "15:00", checkout: "11:00", rooms: 1, parking: "あり（無料）", spring: "-", addr: "当日のおたのしみ",
     plans: [
       { id: "bday", name: "【お誕生日・記念日】一棟まるごと貸切♪特別ディナー付き ログハウスでおこもりプラン", meal: "夕食：特別ディナー（シェフの気まぐれ）／朝食：頑張って作ろう", room: "ログハウス一棟（リビング＋ロフト）", price: 18000, img: "cabin4.jpg", badges: [["b-pink", "お誕生日"], ["b-red", "人気No.1"]], recommend: true },
-      { id: "std", name: "【素泊まり】南仏インテリアのログハウスを一棟貸切", meal: "食事なし（キッチン利用可）", room: "ログハウス一棟（リビング＋ロフト）", price: 14000, img: "cabin5.jpg", badges: [["b-line", "スタンダード"]] },
-      { id: "late", name: "【だらだら連泊】2泊以上でお得！薪ストーブの前でのんびり", meal: "食事なし（キッチン利用可）", room: "ログハウス一棟（リビング＋ロフト）", price: 12500, img: "cabin1.jpg", badges: [["b-or", "連泊割"]] },
+      { id: "std", name: "【素泊まり】南仏インテリアのログハウスを一棟貸切", meal: "食事なし（キッチン利用可）", room: "ログハウス一棟（リビング＋ロフト）", price: 14000, img: "cabin5.jpg", badges: [["b-line", "スタンダード"]], soldOut: true },
+      { id: "late", name: "【だらだら連泊】2泊以上でお得！薪ストーブの前でのんびり", meal: "食事なし（キッチン利用可）", room: "ログハウス一棟（リビング＋ロフト）", price: 12500, img: "cabin1.jpg", badges: [["b-or", "連泊割"]], soldOut: true },
     ],
     voices: [
       { t: "インテリアが本当にかわいい！", u: "mai**** さん / 20代 / 女性 / カップル・夫婦", s: 5, d: "2026年10月", p: "写真どおり、いやそれ以上にかわいいお部屋でした。ソファでごろごろして、夜は特別ディナー。帰りに見た星がとってもきれいでした。", r: "ご宿泊ありがとうございました。またふたりでのんびりしにいらしてください。（オーナー）" },
@@ -581,6 +581,8 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;"
 const H = id => HOTELS.find(h => h.id === id);
 const P = (h, pid) => h.plans.find(p => p.id === pid);
 const canBook = h => BOOKABLE_ID === null || h.id === BOOKABLE_ID;
+const openPlans = h => { const o = h.plans.filter(p => !p.soldOut); return o.length ? o : h.plans; };
+const minPrice = h => Math.min(...openPlans(h).map(p => p.price));
 const stars = r => { const f = Math.round(r); return "★".repeat(f) + `<span style="color:#ddd">${"★".repeat(5 - f)}</span>`; };
 const pts = n => Math.floor(n * 0.02);
 const WD = "日月火水木金土";
@@ -602,7 +604,7 @@ function dayInfo(h, plan, ds) {
   const d = parse(ds), wd = d.getDay();
   const peak = wd === 6 || HOLIDAYS.includes(addD(ds, 1)) || (d.getMonth() === 11 && d.getDate() >= 28) || (d.getMonth() === 0 && d.getDate() <= 3);
   const price = plan.price + (peak ? 6000 : wd === 5 ? 2000 : 0);
-  if (!canBook(h)) return { st: "ng", price };
+  if (!canBook(h) || plan.soldOut) return { st: "ng", price };
   const r = seed(h.id + plan.id + ds) % 10;
   if (r <= 2 || peak) return { st: "few", left: 1 + (r % 2), price };
   return { st: "ok", price };
@@ -724,7 +726,7 @@ function topPage() {
           <span class="no n${i + 1}">${i + 1}</span>
           <img src="img/${h.photos[0][0]}" alt="">
           <p><b>${esc(h.name)}</b>${esc(h.pref)}<br><span class="stars">${stars(h.rating)}</span><span class="score" style="font-size:13px">${h.rating.toFixed(1)}</span><br>
-          ${canBook(h) ? `<span class="price">${yen(Math.min(...h.plans.map(p => p.price)))}〜</span>/人` : `<span class="so">× 売り切れ</span>`}</p>
+          ${canBook(h) ? `<span class="price">${yen(minPrice(h))}〜</span>/人` : `<span class="so">× 売り切れ</span>`}</p>
         </div>`).join("")}
     </div>
     <div class="h-sec">人気の温泉地から探す</div>
@@ -802,7 +804,7 @@ function stayStatus(h, plan, ci, n) {
 }
 function hotelCard(h) {
   const ok = canBook(h);
-  const minPlan = h.plans.reduce((a, b) => a.price < b.price ? a : b);
+  const minPlan = openPlans(h).reduce((a, b) => a.price < b.price ? a : b);
   const minTot = stayTotal(h, minPlan, S.checkin, S.nights, S.adults, 1);
   return `
   <div class="hcard ${ok ? "" : "sold"}">
@@ -899,7 +901,7 @@ function hotelPage(h, tab) {
     b.textContent = w.classList.contains("hidden") ? "空室カレンダーを見る ▼" : "空室カレンダーを閉じる ▲";
   });
   tb.querySelectorAll("[data-plan]").forEach(b => b.onclick = () => startBooking(h.id, b.dataset.plan, S.checkin));
-  const minP = Math.min(...h.plans.map(p => p.price));
+  const minP = minPrice(h);
   const mb = setMbar(ok
     ? `<div class="pr">大人1名 <span class="price">${yen(minP)}</span>〜<br><span class="vac ok" style="display:inline">○ 空室あり</span></div>` +
       (tab === "plan" ? `<button class="btn btn-or" id="mb-go">予約する</button>` : `<a class="btn btn-or" href="#hotel-${h.id}-plan">プラン・空室を見る</a>`)
@@ -909,7 +911,7 @@ function hotelPage(h, tab) {
 }
 function hotelTop(h) {
   const ok = canBook(h);
-  const minP = Math.min(...h.plans.map(p => p.price));
+  const minP = minPrice(h);
   const rvKeys = Object.entries(h.rv).filter(([, v]) => v > 0);
   return `
     <div class="hp-top">
