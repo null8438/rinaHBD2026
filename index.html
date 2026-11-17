@@ -642,10 +642,23 @@ function setMbar(html) {
   el.innerHTML = html; document.body.classList.add("has-mbar");
   return el;
 }
+// 一度予約したら、その後はどのURLを開いても予約完了ページを表示する
+const SAVE_KEY = "daran-booking";
+function loadDone() { try { const v = localStorage.getItem(SAVE_KEY); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+function saveDone(b) { try { localStorage.setItem(SAVE_KEY, JSON.stringify(b)); } catch (e) {} }
+function clearDone() { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} }
 function route() {
   clearInterval(carTimer); setMbar(null);
   const parts = (location.hash.replace(/^#\/?/, "") || "").split(/[-\/]/).filter(Boolean);
   window.scrollTo(0, 0);
+  // 動作確認用：URLの最後に #reset を付けて開くと予約済みの記録を消せる
+  if (parts[0] === "reset") { clearDone(); S.bk = null; location.replace("#top"); return; }
+  const saved = loadDone();
+  if (saved) {
+    S.bk = saved;
+    if (parts[0] !== "done") { location.replace("#done"); return; }
+    return donePage();
+  }
   if (parts[0] === "hotel" && H(parts[1])) return hotelPage(H(parts[1]), parts[2] || "top");
   if (parts[0] === "book" && S.bk) return bookPage();
   if (parts[0] === "confirm" && S.bk && S.bk.filled) return confirmPage();
@@ -1173,7 +1186,7 @@ function confirmPage() {
   document.getElementById("c-ok").onclick = () => {
     const btn = document.getElementById("c-ok");
     btn.disabled = true; btn.textContent = "予約処理中…";
-    setTimeout(() => { b.no = String(Math.floor(10000000 + Math.random() * 89999999)); nav("#done"); }, 900);
+    setTimeout(() => { b.no = String(Math.floor(10000000 + Math.random() * 89999999)); b.at = new Date().toISOString(); saveDone(b); nav("#done"); }, 900);
   };
 }
 function donePage() {
@@ -1217,7 +1230,7 @@ ${esc(c.h.access)}
 
 だらんnet</pre>
     </div>
-    <div class="cta"><a class="btn btn-gr" href="#top" style="padding:10px 30px;width:auto" onclick="S.bk=null">だらんnetトップへ</a></div>`;
+    <div style="text-align:center;font-size:11px;color:var(--sub);margin:10px 0 0">このご予約は確定済みです。予約内容の変更・キャンセルはできません。</div>`;
 }
 
 route();
