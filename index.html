@@ -433,7 +433,7 @@ const HOTELS = [
     kodawari: ["一棟貸し", "特別ディナー", "薪ストーブ", "キッチン付き", "駐車場無料", "Wi-Fi", "記念日対応"],
     checkin: "15:00", checkout: "11:00", rooms: 1, parking: "あり（無料）", spring: "-", addr: "当日のおたのしみ",
     plans: [
-      { id: "bday", name: "【お誕生日・記念日】一棟まるごと貸切♪特別ディナー付き ログハウスでおこもりプラン", meal: "夕食：特別ディナー（シェフの気まぐれ）／朝食：なし", room: "ログハウス一棟（リビング＋ロフト）", price: 18000, img: "cabin4.jpg", badges: [["b-pink", "お誕生日"], ["b-red", "人気No.1"]], recommend: true },
+      { id: "bday", name: "【お誕生日・記念日】一棟まるごと貸切♪特別ディナー付き ログハウスでおこもりプラン", meal: "夕食：特別ディナー（シェフの気まぐれ）／朝食：頑張って作ろう", room: "ログハウス一棟（リビング＋ロフト）", price: 18000, img: "cabin4.jpg", badges: [["b-pink", "お誕生日"], ["b-red", "人気No.1"]], recommend: true },
       { id: "std", name: "【素泊まり】南仏インテリアのログハウスを一棟貸切", meal: "食事なし（キッチン利用可）", room: "ログハウス一棟（リビング＋ロフト）", price: 14000, img: "cabin5.jpg", badges: [["b-line", "スタンダード"]] },
       { id: "late", name: "【だらだら連泊】2泊以上でお得！薪ストーブの前でのんびり", meal: "食事なし（キッチン利用可）", room: "ログハウス一棟（リビング＋ロフト）", price: 12500, img: "cabin1.jpg", badges: [["b-or", "連泊割"]] },
     ],
@@ -1186,7 +1186,7 @@ function confirmPage() {
   document.getElementById("c-ok").onclick = () => {
     const btn = document.getElementById("c-ok");
     btn.disabled = true; btn.textContent = "予約処理中…";
-    setTimeout(() => { b.no = String(Math.floor(10000000 + Math.random() * 89999999)); b.at = new Date().toISOString(); saveDone(b); nav("#done"); }, 900);
+    setTimeout(() => { b.no = "20261121"; b.at = new Date().toISOString(); saveDone(b); nav("#done"); }, 900);
   };
 }
 function donePage() {
