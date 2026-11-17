@@ -604,7 +604,6 @@ function dayInfo(h, plan, ds) {
   const price = plan.price + (peak ? 6000 : wd === 5 ? 2000 : 0);
   if (!canBook(h)) return { st: "ng", price };
   const r = seed(h.id + plan.id + ds) % 10;
-  if (r === 0) return { st: "ng", price };
   if (r <= 2 || peak) return { st: "few", left: 1 + (r % 2), price };
   return { st: "ok", price };
 }
